@@ -1,65 +1,27 @@
 /**
- * ImgAltOverlayElement - Reveal an image’s alternative text in a styleable disclosure overlay
- *
- * @element img-alt-overlay
- *
- * @attr {string} example-attribute - Description of the attribute
- *
- * @fires img-alt-overlay:event-name - Description of the event
- *
- * @slot - Default slot for content
- *
- * @cssprop --component-name-color - Description of CSS custom property
+ * A light-DOM image wrapper with a non-modal, in-image alt-text dialog.
+ * @cssprop --img-alt-button-inset-block-start - Opener block-start inset (0.5rem).
+ * @cssprop --img-alt-button-inset-block-end - Opener block-end inset (auto).
+ * @cssprop --img-alt-button-inset-inline-start - Opener inline-start inset (auto).
+ * @cssprop --img-alt-button-inset-inline-end - Opener inline-end inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-block-start - Overlay area block-start inset (3.75rem).
+ * @cssprop --img-alt-overlay-inset-block-end - Overlay area block-end inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-inline-start - Overlay area inline-start inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-inline-end - Overlay area inline-end inset (0.5rem).
  */
 export class ImgAltOverlayElement extends HTMLElement {
-	/**
-	 * List of attributes to observe for changes
-	 */
 	static readonly observedAttributes: string[];
+	readonly state: 'idle' | 'inactive' | 'ready' | 'error';
+	/** Reread image structure and labels. Closes any open dialog. */
+	refresh(): void;
+}
 
-	/**
-	 * Internal state and flags
-	 */
-	private readonly _internals: {
-		isRendered: boolean;
-	};
-
-	constructor();
-
-	/**
-	 * Called when the element is connected to the DOM
-	 */
-	connectedCallback(): void;
-
-	/**
-	 * Called when an observed attribute changes
-	 * @param name - The attribute name that changed
-	 * @param oldValue - The previous value
-	 * @param newValue - The new value
-	 */
-	attributeChangedCallback(
-		name: string,
-		oldValue: string | null,
-		newValue: string | null,
-	): void;
-
-	/**
-	 * Upgrade a property to handle cases where it was set before the element upgraded.
-	 * This is especially important for framework compatibility.
-	 * @param prop - Property name to upgrade
-	 * @private
-	 */
-	private _upgradeProperty(prop: string): void;
-
-	/**
-	 * Example attribute as a property.
-	 * Reflects between property and attribute to keep them in sync.
-	 */
-	get exampleAttribute(): string | null;
-	set exampleAttribute(value: string | null | undefined);
-
-	/**
-	 * Renders the component's shadow DOM content
-	 */
-	render(): void;
+declare global {
+	interface HTMLElementTagNameMap {
+		'img-alt-overlay': ImgAltOverlayElement;
+	}
+	interface HTMLElementEventMap {
+		'img-alt-overlay:ready': CustomEvent<void>;
+		'img-alt-overlay:error': CustomEvent<{ error: Error }>;
+	}
 }
