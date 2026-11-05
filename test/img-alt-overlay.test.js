@@ -75,7 +75,8 @@ describe('image alt dialog', () => {
 		const trigger = element.querySelector('[data-alt-trigger]');
 		const dialog = element.querySelector('dialog');
 		expect(trigger.type).toBe('button');
-		expect(trigger.getAttribute('command')).toBe('show-modal');
+		expect(trigger.getAttribute('command')).toBe('--toggle-alt');
+		expect(trigger.getAttribute('aria-expanded')).toBe('false');
 		expect(trigger.getAttribute('commandfor')).toBe(dialog.id);
 		expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
 		expect(
@@ -221,7 +222,7 @@ describe('image alt dialog', () => {
 		expect(element.state).toBe('idle');
 		expect(element.children).toHaveLength(1);
 		expect(element.firstElementChild).toBe(image);
-		const show = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
+		const show = vi.spyOn(HTMLDialogElement.prototype, 'show');
 		trigger.click();
 		expect(show).not.toHaveBeenCalled();
 		document.body.append(element);
@@ -253,12 +254,29 @@ describe('image alt dialog', () => {
 	it('uses the JS command fallback once and respects canceled clicks', async () => {
 		const element = await mount();
 		const dialog = element.querySelector('dialog');
-		const show = vi.spyOn(dialog, 'showModal');
+		const show = vi.spyOn(dialog, 'show');
 		const close = vi.spyOn(dialog, 'close');
 		element.querySelector('[data-alt-trigger]').click();
 		expect(show).toHaveBeenCalledTimes(1);
+		expect(element.querySelector('[data-alt-trigger]').textContent).toBe(
+			'Close',
+		);
+		expect(
+			element
+				.querySelector('[data-alt-trigger]')
+				.getAttribute('aria-expanded'),
+		).toBe('true');
 		element.querySelector('[data-alt-close]').click();
+		await settle();
 		expect(close).toHaveBeenCalledTimes(1);
+		expect(element.querySelector('[data-alt-trigger]').textContent).toBe(
+			'View alt text',
+		);
+		expect(
+			element
+				.querySelector('[data-alt-trigger]')
+				.getAttribute('aria-expanded'),
+		).toBe('false');
 		element
 			.querySelector('[data-alt-trigger]')
 			.addEventListener('click', (event) => {
@@ -268,7 +286,7 @@ describe('image alt dialog', () => {
 		expect(show).toHaveBeenCalledTimes(1);
 	});
 
-	it('leaves command execution to the browser when supported', async () => {
+	it('handles the custom opening command without installing a duplicate click fallback', async () => {
 		vi.stubGlobal('CommandEvent', class extends Event {});
 		Object.defineProperty(
 			HTMLButtonElement.prototype,
@@ -282,9 +300,41 @@ describe('image alt dialog', () => {
 		);
 		try {
 			const element = await mount();
-			const show = vi.spyOn(element.querySelector('dialog'), 'showModal');
-			element.querySelector('[data-alt-trigger]').click();
+			const dialog = element.querySelector('dialog');
+			const show = vi.spyOn(dialog, 'show');
+			const close = vi.spyOn(dialog, 'close');
+			const trigger = element.querySelector('[data-alt-trigger]');
+			trigger.click();
 			expect(show).not.toHaveBeenCalled();
+			const command = Object.assign(new Event('command'), {
+				command: '--toggle-alt',
+				source: trigger,
+			});
+			const canceled = Object.assign(
+				new Event('command', { cancelable: true }),
+				{
+					command: '--toggle-alt',
+					source: trigger,
+				},
+			);
+			canceled.preventDefault();
+			dialog.dispatchEvent(canceled);
+			dialog.dispatchEvent(
+				Object.assign(new Event('command'), {
+					command: '--toggle-alt',
+					source: document.createElement('button'),
+				}),
+			);
+			expect(show).not.toHaveBeenCalled();
+			dialog.dispatchEvent(command);
+			expect(show).toHaveBeenCalledTimes(1);
+			expect(trigger.getAttribute('aria-expanded')).toBe('true');
+			dialog.dispatchEvent(command);
+			expect(close).toHaveBeenCalledTimes(1);
+			expect(trigger.getAttribute('aria-expanded')).toBe('false');
+			element.remove();
+			dialog.dispatchEvent(command);
+			expect(show).toHaveBeenCalledTimes(1);
 		} finally {
 			delete HTMLButtonElement.prototype.commandForElement;
 			vi.unstubAllGlobals();
@@ -292,17 +342,51 @@ describe('image alt dialog', () => {
 	});
 
 	it('reports unsupported dialog APIs without adding dead controls', async () => {
-		vi.spyOn(HTMLDialogElement.prototype, 'showModal').mockImplementation(
+		vi.spyOn(HTMLDialogElement.prototype, 'show').mockImplementation(
 			undefined,
 		);
-		const original = HTMLDialogElement.prototype.showModal;
-		HTMLDialogElement.prototype.showModal = undefined;
+		const original = HTMLDialogElement.prototype.show;
+		HTMLDialogElement.prototype.show = undefined;
 		try {
 			const element = await mount();
 			expect(element.state).toBe('error');
 			expect(element.querySelector('button')).toBeNull();
 		} finally {
-			HTMLDialogElement.prototype.showModal = original;
+			HTMLDialogElement.prototype.show = original;
 		}
+	});
+
+	it('closes on Escape inside the wrapper, respects cancellation, and cleans up the handler', async () => {
+		const element = await mount();
+		const text = element.querySelector('[data-alt-text]');
+		const dialog = element.querySelector('dialog');
+		dialog.show();
+		const canceled = new KeyboardEvent('keydown', {
+			key: 'Escape',
+			bubbles: true,
+			cancelable: true,
+		});
+		canceled.preventDefault();
+		text.dispatchEvent(canceled);
+		expect(dialog.open).toBe(true);
+		const escape = new KeyboardEvent('keydown', {
+			key: 'Escape',
+			bubbles: true,
+			cancelable: true,
+		});
+		text.dispatchEvent(escape);
+		expect(dialog.open).toBe(false);
+		expect(
+			element
+				.querySelector('[data-alt-trigger]')
+				.getAttribute('aria-expanded'),
+		).toBe('false');
+		expect(escape.defaultPrevented).toBe(true);
+		element.remove();
+		dialog.show();
+		text.dispatchEvent(
+			new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+		);
+		expect(dialog.open).toBe(true);
 	});
 });

@@ -1,4 +1,4 @@
-/** A light-DOM image wrapper with a native modal alt-text dialog. */
+/** A light-DOM image wrapper with a non-modal, in-image alt-text dialog. */
 export class ImgAltOverlayElement extends HTMLElement {
 	static readonly observedAttributes: string[];
 	readonly state: 'idle' | 'inactive' | 'ready' | 'error';

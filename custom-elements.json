@@ -9,7 +9,7 @@
 				{
 					"kind": "class",
 					"name": "ImgAltOverlayElement",
-					"description": "A light-DOM image wrapper with a native, command-driven modal alt-text dialog and a JavaScript command fallback.",
+					"description": "A light-DOM image wrapper with a non-modal, in-image alt-text dialog, custom toggle command, native closing command, and JavaScript command fallback. The opener reflects aria-expanded; the default stylesheet reveals the separate Close control on focus.",
 					"tagName": "img-alt-overlay",
 					"customElement": true,
 					"superclass": { "name": "HTMLElement" },
@@ -22,13 +22,13 @@
 						},
 						{
 							"name": "dialog-label",
-							"description": "Visible dialog heading and accessible dialog name. Must be nonempty.",
+							"description": "Dialog heading and accessible dialog name. Visually hidden by the default stylesheet. Must be nonempty.",
 							"type": { "text": "string" },
 							"default": "\"Image description\""
 						},
 						{
 							"name": "close-label",
-							"description": "Visible and accessible close label. Must be nonempty.",
+							"description": "Dismissal label for the opener while open and for the separate Close button. Must be nonempty.",
 							"type": { "text": "string" },
 							"default": "\"Close\""
 						}

@@ -2,7 +2,7 @@ const BaseElement = globalThis.HTMLElement ?? class {};
 let nextId = 0;
 
 /**
- * Reveal an image's alternative text in a native modal dialog.
+ * Reveal an image's alternative text in a non-modal, in-image dialog.
  * @element img-alt-overlay
  */
 export class ImgAltOverlayElement extends BaseElement {
@@ -23,9 +23,49 @@ export class ImgAltOverlayElement extends BaseElement {
 			if (event.defaultPrevented || !this._ui) return;
 			const button = event.target.closest?.('button');
 			const { trigger, close, dialog } = this._ui;
-			if (button === trigger) dialog.showModal();
+			if (button === trigger) this._toggleDialog();
 			else if (button === close) dialog.close();
 		};
+		this._onCommand = (event) => {
+			const ui = this._ui;
+			if (
+				!event.defaultPrevented &&
+				ui &&
+				event.target === ui.dialog &&
+				event.source === ui.trigger &&
+				event.command === '--toggle-alt'
+			) {
+				this._toggleDialog();
+			}
+		};
+		this._onKeyDown = (event) => {
+			if (
+				event.defaultPrevented ||
+				event.key !== 'Escape' ||
+				!this._ui?.dialog.open
+			)
+				return;
+			event.preventDefault();
+			this._toggleDialog();
+		};
+		this._onClose = (event) => {
+			if (event.target === this._ui?.dialog) this._updateTrigger();
+		};
+	}
+
+	_toggleDialog() {
+		const ui = this._ui;
+		if (!ui) return;
+		if (ui.dialog.open) ui.dialog.close();
+		else ui.dialog.show();
+		if (this._ui === ui) this._updateTrigger();
+	}
+
+	_updateTrigger() {
+		const { trigger, dialog } = this._ui;
+		trigger.textContent =
+			this._labels[dialog.open ? 'close-label' : 'button-label'];
+		trigger.setAttribute('aria-expanded', String(dialog.open));
 	}
 
 	get state() {
@@ -130,7 +170,7 @@ export class ImgAltOverlayElement extends BaseElement {
 		const document = this.ownerDocument;
 		const dialog = document.createElement('dialog');
 		if (
-			typeof dialog.showModal !== 'function' ||
+			typeof dialog.show !== 'function' ||
 			typeof dialog.close !== 'function'
 		) {
 			throw new Error('img-alt-overlay requires the native dialog API.');
@@ -159,9 +199,10 @@ export class ImgAltOverlayElement extends BaseElement {
 		trigger.textContent = this._labels['button-label'];
 		trigger.setAttribute('data-alt-trigger', '');
 		trigger.setAttribute('commandfor', dialog.id);
-		trigger.setAttribute('command', 'show-modal');
+		trigger.setAttribute('command', '--toggle-alt');
 		trigger.setAttribute('aria-controls', dialog.id);
 		trigger.setAttribute('aria-haspopup', 'dialog');
+		trigger.setAttribute('aria-expanded', 'false');
 		const close = document.createElement('button');
 		close.type = 'button';
 		close.textContent = this._labels['close-label'];
@@ -169,21 +210,30 @@ export class ImgAltOverlayElement extends BaseElement {
 		close.setAttribute('commandfor', dialog.id);
 		close.setAttribute('command', 'close');
 		dialog.append(heading, text, close);
-		this._ui = { dialog, trigger, close, text };
-		this.append(trigger, dialog);
-		if (!('commandForElement' in trigger)) {
+		const container = document.createElement('div');
+		container.setAttribute('data-alt-ui', '');
+		container.append(trigger, dialog);
+		this._ui = { dialog, trigger, close, text, container };
+		this.append(container);
+		dialog.addEventListener('close', this._onClose);
+		this.addEventListener('keydown', this._onKeyDown);
+		if ('commandForElement' in trigger) {
+			dialog.addEventListener('command', this._onCommand);
+		} else {
 			this.addEventListener('click', this._onClick);
 		}
 	}
 
 	_removeUI() {
 		this.removeEventListener('click', this._onClick);
+		this.removeEventListener('keydown', this._onKeyDown);
 		if (!this._ui) return;
-		const { dialog, trigger } = this._ui;
+		const { dialog, container } = this._ui;
 		this._ui = null;
+		dialog.removeEventListener('command', this._onCommand);
+		dialog.removeEventListener('close', this._onClose);
 		if (dialog.open) dialog.close();
-		dialog.remove();
-		trigger.remove();
+		container.remove();
 	}
 
 	_teardown() {

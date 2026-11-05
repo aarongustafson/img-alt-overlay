@@ -1,13 +1,15 @@
 # img-alt-overlay
 
 `<img-alt-overlay>` wraps an image and adds a button that reveals its alternative
-text in a native modal dialog. It leaves the image, its `alt` attribute, responsive
+text in a non-modal dialog over the image. It leaves the image, its `alt` attribute, responsive
 sources, and links alone. Without JavaScript, the original image still works.
 
 The interaction builds on the alt-text overlay on
 [Aaron’s website](https://www.aaron-gustafson.com/notebook/there-can-be-only-one-redux/).
-Unlike that non-modal panel, this version uses a modal dialog: the rest of the
-page is inert while the description is open.
+Like that panel, it stays inside the image’s block and leaves the rest of the
+page interactive. It has no backdrop and doesn’t trap keyboard focus. Activate
+the opener again to close the panel; its label changes to the dismissal wording
+while open.
 
 ## Try it
 
@@ -107,29 +109,41 @@ infer them from filenames, or repair missing alt text.
 The component adds light-DOM markup equivalent to:
 
 ```html
-<button
-  type="button"
-  commandfor="image-alt-dialog"
-  command="show-modal"
-  aria-controls="image-alt-dialog"
-  aria-haspopup="dialog"
->
-  View alt text
-</button>
-<dialog id="image-alt-dialog" aria-labelledby="image-alt-heading">
-  <h2 id="image-alt-heading">Image description</h2>
-  <p tabindex="-1" autofocus>The image’s alternative text.</p>
-  <button type="button" commandfor="image-alt-dialog" command="close">
-    Close
+<div data-alt-ui>
+  <button
+    type="button"
+    commandfor="image-alt-dialog"
+    command="--toggle-alt"
+    aria-controls="image-alt-dialog"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+  >
+    View alt text
   </button>
-</dialog>
+  <dialog id="image-alt-dialog" aria-labelledby="image-alt-heading">
+    <h2 id="image-alt-heading">Image description</h2>
+    <p tabindex="-1" autofocus>The image’s alternative text.</p>
+    <button type="button" commandfor="image-alt-dialog" command="close">
+      Close
+    </button>
+  </dialog>
+</div>
 ```
 
 IDs are generated per instance. Supporting browsers handle the
 [`command` and `commandfor` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#command).
+The opener uses the custom `--toggle-alt` command: its `command` event calls
+`dialog.show()` when closed and `dialog.close()` when open. HTML has no built-in
+command for toggling a non-modal dialog. The separate Close button uses the
+built-in `close` command. The opener’s wording and `aria-expanded` stay in sync
+when either control or Escape closes the panel.
 Where the button’s `commandForElement` API is absent, a delegated click listener
-calls the native dialog’s `showModal()` and `close()` methods instead. It respects
+calls the native dialog’s `show()` and `close()` methods instead. It respects
 canceled clicks and never runs alongside the supported native command path.
+
+Escape closes the dialog while focus is inside the wrapper, unless the key event
+has already been canceled. The listener belongs to the wrapper, not the document;
+Escape elsewhere on the page doesn’t dismiss an unrelated image’s description.
 
 The fallback is for **commands**, not for dialog itself. If the native dialog
 methods aren’t available, enhancement reports an error and adds no controls.
@@ -137,11 +151,11 @@ There’s no dialog polyfill, popover mode, image enlargement, or remote request
 
 ## Labels and configuration
 
-| Attribute      | Default             | Purpose                                         |
-| -------------- | ------------------- | ----------------------------------------------- |
-| `button-label` | `View alt text`     | Visible and accessible name of the opener       |
-| `dialog-label` | `Image description` | Visible dialog heading and accessible name      |
-| `close-label`  | `Close`             | Visible and accessible name of the close button |
+| Attribute      | Default             | Purpose                                                                       |
+| -------------- | ------------------- | ----------------------------------------------------------------------------- |
+| `button-label` | `View alt text`     | Visible and accessible name of the opener                                     |
+| `dialog-label` | `Image description` | Dialog heading and accessible name; visually hidden by the default stylesheet |
+| `close-label`  | `Close`             | Dismissal wording for the open-state opener and the keyboard Close button     |
 
 Authored attributes override defaults. All labels must contain non-whitespace
 text. Labels and alt text are inserted as plain text, never interpreted as HTML.
@@ -218,13 +232,23 @@ text remains available in the dialog.
 
 All generated UI is light DOM. Without the optional stylesheet, controls remain
 in normal flow and the browser supplies the dialog presentation. With it, the
-opener sits at the image’s block-start/inline-end corner and the modal dialog
-is centered in the viewport. It wraps long descriptions and scrolls when needed.
+opener sits at the image’s block-start/inline-end corner and the non-modal dialog
+is vertically centered in the space below the opener within the image wrapper.
+Its width and maximum height are bounded by that block, not the viewport.
+The opener keeps its own space so the panel can’t cover it. Long descriptions
+wrap and scroll inside the panel; it moves with the image as the page scrolls
+or resizes. The layout layer lets pointer clicks pass through to the image or
+its link outside the controls and open panel.
+
+The separate Close button is visually hidden until focused, but stays in the
+keyboard tab order and accessibility tree. It remains visible during pointer
+interaction once revealed. Without the stylesheet, it’s a normal visible button.
 
 Stable hooks:
 
+- `[data-alt-ui]`: positioned layout wrapper for the controls and panel.
 - `[data-alt-trigger]`: opener button.
-- `[data-alt-dialog]`: native dialog; style its `::backdrop` normally.
+- `[data-alt-dialog]`: native non-modal dialog; there is no backdrop.
 - `[data-alt-text]`: alternative-text paragraph.
 - `[data-alt-close]`: close button.
 
@@ -245,16 +269,20 @@ register the class under another tag name, adapt the stylesheet’s
 
 - The original image keeps its native alternative text. The dialog provides an
   optional visible copy; it doesn’t replace the image’s accessible name.
-- The opener is a real `type="button"` with `aria-haspopup="dialog"`. The
-  dialog is named by its visible heading.
+- The opener is a real `type="button"` with `aria-haspopup="dialog"` and a
+  synchronized `aria-expanded` state. The dialog is named by its heading, which
+  the default stylesheet visually hides to keep the panel compact.
 - Opening focuses the alternative-text paragraph, which is programmatically
   focusable but not an extra Tab stop. This keeps a long description’s beginning
   visible rather than scrolling immediately to Close.
-- Native modal behavior makes the rest of the document inert, contains keyboard
-  navigation, supports Escape dismissal, and restores prior keyboard focus.
+- The dialog is non-modal: the rest of the document stays interactive, and Tab
+  can leave the panel. Close or Escape within the wrapper dismisses it; native
+  dialog behavior restores prior keyboard focus when focus is still inside.
   Pointer focus follows browser conventions: Safari, for example, doesn’t always
   focus clicked buttons. The component doesn’t force a different pointer-focus
   policy.
+- This is a named dialog with an interactive Close control, not `role="tooltip"`.
+  It opens by explicit activation rather than hover alone.
 - No extra live region announces the same description, and no animation is added.
 - Images, links, sources, dimensions, and loading hints remain unchanged. Without
   JavaScript, or after setup failure, no dead controls are added.

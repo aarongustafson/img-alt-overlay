@@ -14,7 +14,7 @@ test('versioned class-only CDN import registers manually and works', async ({
 	await expect(
 		page.getByRole('dialog', { name: 'Image description' }),
 	).toBeVisible();
-	await page.getByRole('button', { name: 'Close', exact: true }).click();
+	await page.locator('[data-alt-trigger]').click();
 	await expect(page.getByRole('dialog')).not.toBeVisible();
 });
 

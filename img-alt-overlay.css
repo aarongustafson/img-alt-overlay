@@ -29,38 +29,61 @@ img-alt-overlay [data-alt-close] {
 }
 
 img-alt-overlay [data-alt-trigger] {
+	flex: none;
+	align-self: flex-end;
+}
+
+img-alt-overlay [data-alt-ui] {
 	position: absolute;
-	inset-block-start: 0.5rem;
-	inset-inline-end: 0.5rem;
+	inset: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	pointer-events: none;
+}
+
+img-alt-overlay [data-alt-ui] > * {
+	pointer-events: auto;
 }
 
 img-alt-overlay [data-alt-dialog] {
+	position: static;
+	flex: 0 1 auto;
+	margin: auto 0;
 	box-sizing: border-box;
-	inline-size: min(36rem, calc(100vw - 2rem));
-	max-block-size: calc(100dvh - 2rem);
+	inline-size: 100%;
+	max-inline-size: 100%;
+	max-block-size: 100%;
+	min-block-size: 0;
 	overflow: auto;
 	overscroll-behavior: contain;
 	color: var(--img-alt-dialog-color, CanvasText);
 	background: var(--img-alt-dialog-background, Canvas);
 	border: 2px solid currentColor;
 	border-radius: 0.5rem;
-	padding: 1.5rem;
+	padding: 0.75rem;
 	overflow-wrap: anywhere;
 	text-align: start;
 }
 
-img-alt-overlay [data-alt-dialog]::backdrop {
-	background: rgb(0 0 0 / 65%);
-}
-
-img-alt-overlay [data-alt-dialog] h2 {
-	font-size: 1.25rem;
-	margin-block: 0 1rem;
-}
-
 img-alt-overlay [data-alt-text] {
 	white-space: pre-wrap;
-	margin-block: 0 1rem;
+	margin-block: 0 0.75rem;
+}
+
+/* Keep a focused control stable if Safari blurs it during pointer activation. */
+img-alt-overlay [data-alt-dialog] h2,
+img-alt-overlay [data-alt-close]:not(:focus, :active) {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	min-block-size: 0;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
 }
 
 img-alt-overlay :is(button, [data-alt-text]):focus-visible {

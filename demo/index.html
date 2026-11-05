@@ -13,8 +13,8 @@
 		<header>
 			<h1>&lt;img-alt-overlay&gt;</h1>
 			<p>
-				Read an image’s alternative text in a native modal dialog. See
-				the <a href="../README.md">README</a> for installation and API
+				Read an image’s alternative text in an in-image overlay. See the
+				<a href="../README.md">README</a> for installation and API
 				details.
 			</p>
 		</header>
@@ -22,9 +22,11 @@
 			<p>
 				Wrap one image, optionally inside a picture or link. The
 				component adds a “View alt text” button only when the image has
-				nonempty alt text. Opening the dialog makes the rest of the page
-				inert until you close it. Use the Close button or Escape;
-				keyboard focus returns to the opener.
+				nonempty alt text. The non-modal dialog stays over the image;
+				the rest of the page remains interactive and Tab can leave the
+				panel. Click the opener again, or press Escape while focus is
+				inside the wrapper, to dismiss it. The separate Close button
+				appears when it receives keyboard focus.
 			</p>
 			<noscript
 				><p>
