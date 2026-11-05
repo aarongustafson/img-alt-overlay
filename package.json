@@ -1,0 +1,82 @@
+{
+	"name": "@aarongustafson/img-alt-overlay",
+	"version": "0.0.1",
+	"description": "Reveal an image’s alternative text in a styleable disclosure overlay",
+	"keywords": [
+		"html",
+		"custom element",
+		"web component"
+	],
+	"author": "Aaron Gustafson <aaron@easy-designs.net> (https://www.aaron-gustafson.com/)",
+	"license": "MIT",
+	"homepage": "https://github.com/aarongustafson/img-alt-overlay#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/aarongustafson/img-alt-overlay.git"
+	},
+	"bugs": {
+		"url": "https://github.com/aarongustafson/img-alt-overlay/issues"
+	},
+	"type": "module",
+	"main": "index.js",
+	"module": "img-alt-overlay.js",
+	"customElements": "custom-elements.json",
+	"types": "img-alt-overlay.d.ts",
+	"exports": {
+		".": {
+			"types": "./img-alt-overlay.d.ts",
+			"import": "./index.js"
+		},
+		"./img-alt-overlay.js": {
+			"types": "./img-alt-overlay.d.ts",
+			"import": "./img-alt-overlay.js"
+		},
+		"./define.js": {
+			"import": "./define.js"
+		},
+		"./custom-elements.json": "./custom-elements.json"
+	},
+	"files": [
+		"img-alt-overlay.js",
+		"img-alt-overlay.d.ts",
+		"define.js",
+		"index.js",
+		"custom-elements.json",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"packageManager": "npm@11.15.0",
+	"scripts": {
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:run": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"lint": "npm run lint:eslint && npm run lint:prettier",
+		"format": "npm run format:eslint && npm run format:prettier",
+		"lint:eslint": "eslint .",
+		"format:eslint": "eslint . --fix",
+		"lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
+		"format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
+		"version": "node scripts/update-demo-versions.js && git add demo/esm.html",
+		"postversion": "git push --follow-tags"
+	},
+	"devDependencies": {
+		"@open-wc/eslint-config": "^13.1.0",
+		"@testing-library/dom": "^10.4.2",
+		"@testing-library/user-event": "^14.6.7",
+		"@vitest/coverage-v8": "^5.0.5",
+		"@vitest/ui": "^5.0.5",
+		"eslint": "^10.12.0",
+		"eslint-config-prettier": "^10.1.8",
+		"happy-dom": "^21.0.4",
+		"marked": "18.1.0",
+		"prettier": "^3.9.9",
+		"vitest": "^5.0.5"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

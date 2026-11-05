@@ -1,0 +1,35 @@
+{
+	"schemaVersion": "1.0.0",
+	"readme": "",
+	"modules": [
+		{
+			"kind": "javascript-module",
+			"path": "img-alt-overlay.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"description": "Reveal an image’s alternative text in a styleable disclosure overlay",
+					"name": "ImgAltOverlayElement",
+					"members": [],
+					"events": [],
+					"attributes": [],
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"tagName": "img-alt-overlay",
+					"customElement": true
+				}
+			],
+			"exports": [
+				{
+					"kind": "js",
+					"name": "ImgAltOverlayElement",
+					"declaration": {
+						"name": "ImgAltOverlayElement",
+						"module": "img-alt-overlay.js"
+					}
+				}
+			]
+		}
+	]
+}
