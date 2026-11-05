@@ -3,82 +3,261 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>&lt;img-alt-overlay&gt; Web Component Demo</title>
+		<title>img-alt-overlay demo</title>
 		<link rel="stylesheet" href="./styles.css" />
-		<style>
-			/* Demo-specific styles */
-		</style>
+		<link rel="stylesheet" href="../img-alt-overlay.css" />
+		<link rel="modulepreload" href="../img-alt-overlay.js" />
+		<script type="module" src="../define.js"></script>
 	</head>
 	<body>
 		<header>
 			<h1>&lt;img-alt-overlay&gt;</h1>
 			<p>
-				Reveal an image’s alternative text in a styleable disclosure overlay See the
-				<a
-					href="https://github.com/aarongustafson/img-alt-overlay/blob/main/README.md"
-					>README</a
-				>
-				for installation and API documentation.
+				Read an image’s alternative text in a native modal dialog. See
+				the <a href="../README.md">README</a> for installation and API
+				details.
 			</p>
 		</header>
-
 		<main>
-			<!-- Basic Example -->
-			<section>
-				<h2>Basic Example</h2>
-				<p>A simple demonstration of the component.</p>
-
-				<div class="demo-section">
-					<h3>Basic Usage</h3>
-					<p>Description of this example.</p>
-					<div class="code-demo-pair">
-						<pre><code>&lt;img-alt-overlay&gt;
-  &lt;p&gt;Content goes here&lt;/p&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
-						<div class="demo">
-							<img-alt-overlay>
-								<p>Content goes here</p>
-							</img-alt-overlay>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<!-- Example with Attributes -->
-			<section>
-				<h2>Example with Attributes</h2>
-				<p>Demonstrating component attributes.</p>
-
-				<div class="demo-section">
-					<h3>Using Attributes</h3>
-					<p>Description of this example with attributes.</p>
-					<div class="code-demo-pair">
-						<pre><code>&lt;img-alt-overlay example-attribute="value"&gt;
-  &lt;p&gt;Content with attributes&lt;/p&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
-						<div class="demo">
-							<img-alt-overlay example-attribute="value">
-								<p>Content with attributes</p>
-							</img-alt-overlay>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<!-- API Reference -->
-			<section class="api-reference">
-				<h2>API Reference</h2>
+			<p>
+				Wrap one image, optionally inside a picture or link. The
+				component adds a “View alt text” button only when the image has
+				nonempty alt text. Opening the dialog makes the rest of the page
+				inert until you close it. Use the Close button or Escape;
+				keyboard focus returns to the opener.
+			</p>
+			<noscript
+				><p>
+					JavaScript is off. The images, links, captions, and
+					alternative text still work; no dialog buttons are added.
+				</p></noscript
+			>
+			<section class="demo-section">
+				<h2>Start with an image</h2>
 				<p>
-					For complete documentation of attributes, events, and
-					browser support, see the
-					<a
-						href="https://github.com/aarongustafson/img-alt-overlay/blob/main/README.md"
-						>README</a
-					>.
+					The button opens a command-driven dialog. The component
+					never replaces or clones the image.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;img-alt-overlay&gt;
+  &lt;img src="bicycle.svg"
+    width="640" height="360"
+    alt="A red bicycle beside a blue wall, with a basket on its handlebars."&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay id="basic">
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle beside a blue wall, with a basket on its handlebars."
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+			</section>
+			<section class="demo-section">
+				<h2>Translate the controls</h2>
+				<p>
+					<code>button-label</code>, <code>dialog-label</code>, and
+					<code>close-label</code> replace all generated wording.
+					They’re plain text; <code>lang</code> and
+					<code>dir</code> inherit normally.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;img-alt-overlay lang="fr"
+  button-label="Voir le texte alternatif"
+  dialog-label="Description de l’image"
+  close-label="Fermer"&gt;
+  &lt;img src="bicycle.svg" width="640" height="360"
+    alt="Un vélo rouge devant un mur bleu, avec un panier sur le guidon."&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay
+							id="french"
+							lang="fr"
+							button-label="Voir le texte alternatif"
+							dialog-label="Description de l’image"
+							close-label="Fermer"
+						>
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="Un vélo rouge devant un mur bleu, avec un panier sur le guidon."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+				<div class="code-demo-pair">
+					<pre><code>&lt;img-alt-overlay lang="ar" dir="rtl"
+  button-label="عرض النص البديل"
+  dialog-label="وصف الصورة"
+  close-label="إغلاق"&gt;
+  &lt;img src="bicycle.svg" width="640" height="360"
+    alt="دراجة حمراء أمام جدار أزرق، وسلة على المقود."&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay
+							id="arabic"
+							lang="ar"
+							dir="rtl"
+							button-label="عرض النص البديل"
+							dialog-label="وصف الصورة"
+							close-label="إغلاق"
+						>
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="دراجة حمراء أمام جدار أزرق، وسلة على المقود."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+			</section>
+			<section class="demo-section">
+				<h2>Keep responsive images and links</h2>
+				<p>
+					Put an image link inside the wrapper, not around it. The
+					generated button remains outside the link. Keep captions
+					outside the image wrapper.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;figure&gt;
+  &lt;img-alt-overlay&gt;
+    &lt;a href="bicycle.svg"&gt;
+      &lt;picture&gt;
+        &lt;source media="(min-width: 40em)"
+          srcset="bicycle.svg"&gt;
+        &lt;img src="bicycle.svg" width="640"
+          height="360" alt="View the red bicycle illustration."&gt;
+      &lt;/picture&gt;
+    &lt;/a&gt;
+  &lt;/img-alt-overlay&gt;
+  &lt;figcaption&gt;A neighborhood bicycle.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+					<div class="demo">
+						<figure>
+							<img-alt-overlay id="linked">
+								<a href="./bicycle.svg">
+									<picture>
+										<source
+											media="(min-width: 40em)"
+											srcset="./bicycle.svg"
+										/>
+										<img
+											src="./bicycle.svg"
+											width="640"
+											height="360"
+											alt="View the red bicycle illustration."
+											loading="lazy"
+										/>
+									</picture>
+								</a>
+							</img-alt-overlay>
+							<figcaption>A neighborhood bicycle.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</section>
+			<section class="demo-section">
+				<h2>Theme the overlay</h2>
+				<p>
+					The optional stylesheet uses logical positioning and stable
+					light-DOM hooks. Without it, the same native dialog works
+					with browser-default presentation.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>img-alt-overlay.bright {
+  --img-alt-button-background: #fff;
+  --img-alt-button-color: #132d46;
+  --img-alt-dialog-background: #f0f7ff;
+  --img-alt-dialog-color: #132d46;
+}</code></pre>
+					<div class="demo">
+						<img-alt-overlay class="bright">
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle against a blue wall. Two dark wheels rest on a pale pavement."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+			</section>
+			<section class="demo-section">
+				<h2>Leave decorative images alone</h2>
+				<p>
+					Empty alt text is intentional for decorative images, so no
+					button appears. Missing alt text also produces no button,
+					but authors still need to supply an appropriate alternative
+					or mark the image decorative.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;img-alt-overlay&gt;
+  &lt;img src="bicycle.svg" width="640"
+    height="360" alt=""&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay id="decorative">
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt=""
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+				<div hidden id="missing">
+					<img-alt-overlay
+						><img src="./bicycle.svg" width="640" height="360"
+					/></img-alt-overlay>
+				</div>
+			</section>
+			<section class="demo-section">
+				<h2>Loading, failure, and long descriptions</h2>
+				<p>
+					Nothing hides the image while JavaScript loads. Disable
+					JavaScript or block the module request to check the native
+					fallback. The component doesn’t fetch images, change loading
+					hints, or depend on image load. Long descriptions wrap and
+					scroll inside the dialog.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;img-alt-overlay&gt;
+  &lt;img src="missing-image.svg" width="640"
+    height="360"
+    alt="A red bicycle with a basket. The front wheel points slightly to the left; a blue wall fills the background."&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay id="broken">
+							<img
+								src="./missing-image.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle with a basket. The front wheel points slightly to the left; a blue wall fills the background."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+				<p>
+					Invalid configuration emits
+					<code>img-alt-overlay:error</code> and leaves authored
+					markup alone. See the
+					<a href="./esm.html">versioned CDN example</a>
+					for class-only imports; it needs the package to be published
+					first.
 				</p>
 			</section>
 		</main>
-
 		<footer>
 			<p>
 				Made with ❤️ by
@@ -89,7 +268,5 @@
 				>.
 			</p>
 		</footer>
-
-		<script src="../define.js" type="module"></script>
 	</body>
 </html>

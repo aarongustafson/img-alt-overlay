@@ -1,6 +1,6 @@
 {
 	"schemaVersion": "1.0.0",
-	"readme": "",
+	"readme": "README.md",
 	"modules": [
 		{
 			"kind": "javascript-module",
@@ -8,22 +8,138 @@
 			"declarations": [
 				{
 					"kind": "class",
-					"description": "Reveal an image’s alternative text in a styleable disclosure overlay",
 					"name": "ImgAltOverlayElement",
-					"members": [],
-					"events": [],
-					"attributes": [],
-					"superclass": {
-						"name": "HTMLElement"
-					},
+					"description": "A light-DOM image wrapper with a native, command-driven modal alt-text dialog and a JavaScript command fallback.",
 					"tagName": "img-alt-overlay",
-					"customElement": true
+					"customElement": true,
+					"superclass": { "name": "HTMLElement" },
+					"attributes": [
+						{
+							"name": "button-label",
+							"description": "Visible and accessible opener label. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"View alt text\""
+						},
+						{
+							"name": "dialog-label",
+							"description": "Visible dialog heading and accessible dialog name. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"Image description\""
+						},
+						{
+							"name": "close-label",
+							"description": "Visible and accessible close label. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"Close\""
+						}
+					],
+					"members": [
+						{
+							"kind": "field",
+							"name": "state",
+							"readonly": true,
+							"type": {
+								"text": "'idle' | 'inactive' | 'ready' | 'error'"
+							},
+							"description": "Current enhancement state.",
+							"default": "\"idle\""
+						},
+						{
+							"kind": "method",
+							"name": "refresh",
+							"description": "Closes any open dialog, restores authored markup, and rereads image structure and labels.",
+							"return": { "type": { "text": "void" } }
+						}
+					],
+					"events": [
+						{
+							"name": "img-alt-overlay:ready",
+							"type": { "text": "CustomEvent<void>" },
+							"description": "Bubbles when a new set of usable controls has been created."
+						},
+						{
+							"name": "img-alt-overlay:error",
+							"type": { "text": "CustomEvent<{ error: Error }>" },
+							"description": "Bubbles on configuration or setup failure. Authored content remains intact."
+						}
+					],
+					"cssProperties": [
+						{
+							"name": "--img-alt-button-color",
+							"default": "#fff",
+							"description": "Opener and close-button text color in the optional stylesheet."
+						},
+						{
+							"name": "--img-alt-button-background",
+							"default": "#111",
+							"description": "Opener and close-button background."
+						},
+						{
+							"name": "--img-alt-dialog-color",
+							"default": "CanvasText",
+							"description": "Dialog text color."
+						},
+						{
+							"name": "--img-alt-dialog-background",
+							"default": "Canvas",
+							"description": "Dialog background."
+						},
+						{
+							"name": "--img-alt-focus-color",
+							"default": "Highlight",
+							"description": "Visible focus outline color."
+						}
+					]
 				}
 			],
 			"exports": [
 				{
 					"kind": "js",
 					"name": "ImgAltOverlayElement",
+					"declaration": {
+						"name": "ImgAltOverlayElement",
+						"module": "img-alt-overlay.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "index.js",
+			"exports": [
+				{
+					"kind": "js",
+					"name": "ImgAltOverlayElement",
+					"declaration": {
+						"name": "ImgAltOverlayElement",
+						"module": "img-alt-overlay.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "define.js",
+			"declarations": [
+				{
+					"kind": "function",
+					"name": "defineImgAltOverlay",
+					"description": "Registers img-alt-overlay when a browser registry exists; also called on import.",
+					"return": { "type": { "text": "boolean" } }
+				}
+			],
+			"exports": [
+				{
+					"kind": "js",
+					"name": "defineImgAltOverlay",
+					"declaration": {
+						"name": "defineImgAltOverlay",
+						"module": "define.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "img-alt-overlay",
 					"declaration": {
 						"name": "ImgAltOverlayElement",
 						"module": "img-alt-overlay.js"

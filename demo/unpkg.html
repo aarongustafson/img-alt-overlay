@@ -5,25 +5,59 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay via unpkg</title>
 		<link rel="stylesheet" href="./styles.css" />
-		<style>
-			/* Demo-specific styles */
-		</style>
+		<link rel="stylesheet" href="../img-alt-overlay.css" />
 	</head>
 	<body>
-		<h1>unpkg CDN sanity check</h1>
-		<p>
-			This page loads the guarded definition helper from
-			<code>unpkg</code> and registers the element when supported.
-		</p>
+		<header>
+			<h1>&lt;img-alt-overlay&gt; via unpkg</h1>
+			<p>
+				Automatic registration from the latest published package. See
+				the <a href="../README.md">README</a>.
+			</p>
+		</header>
+		<main>
+			<section class="demo-section">
+				<h2>Load the registration entry point</h2>
+				<p>
+					This URL requires a published package. Failed loading leaves
+					the image usable without adding a dead control. Prefer a
+					pinned version for production.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>&lt;script type="module"
+  src="https://unpkg.com/@aarongustafson/img-alt-overlay@latest/define.js?module"&gt;
+&lt;/script&gt;
 
-		<img-alt-overlay>
-			<p>Replace this markup once you customize img-alt-overlay.</p>
-		</img-alt-overlay>
-
-		<script type="module">
-			import { defineComponentName } from 'https://unpkg.com/@aarongustafson/img-alt-overlay@latest/define.js?module';
-
-			defineComponentName();
-		</script>
+&lt;img-alt-overlay&gt;
+  &lt;img src="bicycle.svg" width="640" height="360"
+    alt="A red bicycle beside a blue wall."&gt;
+&lt;/img-alt-overlay&gt;</code></pre>
+					<div class="demo">
+						<img-alt-overlay>
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle beside a blue wall."
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+			</section>
+		</main>
+		<footer>
+			<p>
+				Made with ❤️ by
+				<a href="https://github.com/aarongustafson">Aaron Gustafson</a>.
+				View the source on
+				<a href="https://github.com/aarongustafson/img-alt-overlay"
+					>GitHub</a
+				>.
+			</p>
+		</footer>
+		<script
+			type="module"
+			src="https://unpkg.com/@aarongustafson/img-alt-overlay@latest/define.js?module"
+		></script>
 	</body>
 </html>

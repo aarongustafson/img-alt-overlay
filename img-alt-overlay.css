@@ -1,0 +1,69 @@
+img-alt-overlay {
+	display: inline-block;
+	position: relative;
+	max-inline-size: 100%;
+	vertical-align: top;
+}
+
+img-alt-overlay[hidden],
+img-alt-overlay [hidden] {
+	display: none;
+}
+
+img-alt-overlay img {
+	display: block;
+	max-inline-size: 100%;
+	block-size: auto;
+}
+
+img-alt-overlay [data-alt-trigger],
+img-alt-overlay [data-alt-close] {
+	font: inherit;
+	color: var(--img-alt-button-color, #fff);
+	background: var(--img-alt-button-background, #111);
+	border: 2px solid currentColor;
+	border-radius: 0.25rem;
+	padding: 0.5rem 0.75rem;
+	min-block-size: 2.75rem;
+	cursor: pointer;
+}
+
+img-alt-overlay [data-alt-trigger] {
+	position: absolute;
+	inset-block-start: 0.5rem;
+	inset-inline-end: 0.5rem;
+}
+
+img-alt-overlay [data-alt-dialog] {
+	box-sizing: border-box;
+	inline-size: min(36rem, calc(100vw - 2rem));
+	max-block-size: calc(100dvh - 2rem);
+	overflow: auto;
+	overscroll-behavior: contain;
+	color: var(--img-alt-dialog-color, CanvasText);
+	background: var(--img-alt-dialog-background, Canvas);
+	border: 2px solid currentColor;
+	border-radius: 0.5rem;
+	padding: 1.5rem;
+	overflow-wrap: anywhere;
+	text-align: start;
+}
+
+img-alt-overlay [data-alt-dialog]::backdrop {
+	background: rgb(0 0 0 / 65%);
+}
+
+img-alt-overlay [data-alt-dialog] h2 {
+	font-size: 1.25rem;
+	margin-block: 0 1rem;
+}
+
+img-alt-overlay [data-alt-text] {
+	white-space: pre-wrap;
+	margin-block: 0 1rem;
+}
+
+img-alt-overlay :is(button, [data-alt-text]):focus-visible {
+	outline: 3px solid var(--img-alt-focus-color, Highlight);
+	outline-offset: 3px;
+}
