@@ -4,6 +4,14 @@ let nextId = 0;
 /**
  * Reveal an image's alternative text in a non-modal, in-image dialog.
  * @element img-alt-overlay
+ * @cssprop --img-alt-button-inset-block-start - Opener block-start inset (0.5rem).
+ * @cssprop --img-alt-button-inset-block-end - Opener block-end inset (auto).
+ * @cssprop --img-alt-button-inset-inline-start - Opener inline-start inset (auto).
+ * @cssprop --img-alt-button-inset-inline-end - Opener inline-end inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-block-start - Overlay area block-start inset (3.75rem).
+ * @cssprop --img-alt-overlay-inset-block-end - Overlay area block-end inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-inline-start - Overlay area inline-start inset (0.5rem).
+ * @cssprop --img-alt-overlay-inset-inline-end - Overlay area inline-end inset (0.5rem).
  */
 export class ImgAltOverlayElement extends BaseElement {
 	static observedAttributes = ['button-label', 'dialog-label', 'close-label'];
@@ -212,9 +220,9 @@ export class ImgAltOverlayElement extends BaseElement {
 		dialog.append(heading, text, close);
 		const container = document.createElement('div');
 		container.setAttribute('data-alt-ui', '');
-		container.append(trigger, dialog);
+		container.append(dialog);
 		this._ui = { dialog, trigger, close, text, container };
-		this.append(container);
+		this.append(trigger, container);
 		dialog.addEventListener('close', this._onClose);
 		this.addEventListener('keydown', this._onKeyDown);
 		if ('commandForElement' in trigger) {
@@ -228,11 +236,12 @@ export class ImgAltOverlayElement extends BaseElement {
 		this.removeEventListener('click', this._onClick);
 		this.removeEventListener('keydown', this._onKeyDown);
 		if (!this._ui) return;
-		const { dialog, container } = this._ui;
+		const { dialog, trigger, container } = this._ui;
 		this._ui = null;
 		dialog.removeEventListener('command', this._onCommand);
 		dialog.removeEventListener('close', this._onClose);
 		if (dialog.open) dialog.close();
+		trigger.remove();
 		container.remove();
 	}
 

@@ -65,6 +65,46 @@
 					],
 					"cssProperties": [
 						{
+							"name": "--img-alt-button-inset-block-start",
+							"default": "0.5rem",
+							"description": "Logical block-start inset of the independently positioned opener."
+						},
+						{
+							"name": "--img-alt-button-inset-block-end",
+							"default": "auto",
+							"description": "Logical block-end inset of the opener. Unset block-start to auto when anchoring here."
+						},
+						{
+							"name": "--img-alt-button-inset-inline-start",
+							"default": "auto",
+							"description": "Logical inline-start inset of the opener."
+						},
+						{
+							"name": "--img-alt-button-inset-inline-end",
+							"default": "0.5rem",
+							"description": "Logical inline-end inset of the opener."
+						},
+						{
+							"name": "--img-alt-overlay-inset-block-start",
+							"default": "3.75rem",
+							"description": "Logical block-start inset of the overlay area. Default reserves room below the opener."
+						},
+						{
+							"name": "--img-alt-overlay-inset-block-end",
+							"default": "0.5rem",
+							"description": "Logical block-end inset of the overlay area."
+						},
+						{
+							"name": "--img-alt-overlay-inset-inline-start",
+							"default": "0.5rem",
+							"description": "Logical inline-start inset of the overlay area."
+						},
+						{
+							"name": "--img-alt-overlay-inset-inline-end",
+							"default": "0.5rem",
+							"description": "Logical inline-end inset of the overlay area."
+						},
+						{
 							"name": "--img-alt-button-color",
 							"default": "#fff",
 							"description": "Opener and close-button text color in the optional stylesheet."

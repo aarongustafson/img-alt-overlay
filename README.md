@@ -109,18 +109,23 @@ infer them from filenames, or repair missing alt text.
 The component adds light-DOM markup equivalent to:
 
 ```html
+<button
+  data-alt-trigger
+  type="button"
+  commandfor="image-alt-dialog"
+  command="--toggle-alt"
+  aria-controls="image-alt-dialog"
+  aria-haspopup="dialog"
+  aria-expanded="false"
+>
+  View alt text
+</button>
 <div data-alt-ui>
-  <button
-    type="button"
-    commandfor="image-alt-dialog"
-    command="--toggle-alt"
-    aria-controls="image-alt-dialog"
-    aria-haspopup="dialog"
-    aria-expanded="false"
+  <dialog
+    data-alt-dialog
+    id="image-alt-dialog"
+    aria-labelledby="image-alt-heading"
   >
-    View alt text
-  </button>
-  <dialog id="image-alt-dialog" aria-labelledby="image-alt-heading">
     <h2 id="image-alt-heading">Image description</h2>
     <p tabindex="-1" autofocus>The image’s alternative text.</p>
     <button type="button" commandfor="image-alt-dialog" command="close">
@@ -235,7 +240,9 @@ in normal flow and the browser supplies the dialog presentation. With it, the
 opener sits at the image’s block-start/inline-end corner and the non-modal dialog
 is vertically centered in the space below the opener within the image wrapper.
 Its width and maximum height are bounded by that block, not the viewport.
-The opener keeps its own space so the panel can’t cover it. Long descriptions
+The default overlay area reserves 3.75rem above the panel for the opener.
+If you move the opener or use larger, multiline labels, adjust the overlay
+insets to leave enough room. Long descriptions
 wrap and scroll inside the panel; it moves with the image as the page scrolls
 or resizes. The layout layer lets pointer clicks pass through to the image or
 its link outside the controls and open panel.
@@ -245,13 +252,13 @@ keyboard tab order and accessibility tree. It remains visible during pointer
 interaction once revealed. Without the stylesheet, it’s a normal visible button.
 
 The [website-style demo](./demo/index.html#site-style-example) shows a full-image-width,
-borderless black panel with white text. It removes the layout wrapper’s inset,
-keeps spacing around the opener, and themes only that instance through an
-authored class.
+borderless black panel with white text. It sets the overlay’s inline insets to
+zero, keeps spacing around the opener, and themes only that instance through
+an authored class.
 
 Stable hooks:
 
-- `[data-alt-ui]`: positioned layout wrapper for the controls and panel.
+- `[data-alt-ui]`: positioned area containing the panel, separate from the opener.
 - `[data-alt-trigger]`: opener button.
 - `[data-alt-dialog]`: native non-modal dialog; there is no backdrop.
 - `[data-alt-text]`: alternative-text paragraph.
@@ -264,6 +271,52 @@ Stable hooks:
 | `--img-alt-dialog-color`      | `CanvasText` |
 | `--img-alt-dialog-background` | `Canvas`     |
 | `--img-alt-focus-color`       | `Highlight`  |
+
+### Position the opener and overlay
+
+These properties accept CSS inset values, such as lengths, percentages, and
+`auto`. They position the opener and overlay area independently, relative to the
+image wrapper. Logical sides follow the writing mode and direction:
+`inline-start` is left in horizontal left-to-right text and right in
+right-to-left text.
+
+| CSS custom property                    | Default   |
+| -------------------------------------- | --------- |
+| `--img-alt-button-inset-block-start`   | `0.5rem`  |
+| `--img-alt-button-inset-block-end`     | `auto`    |
+| `--img-alt-button-inset-inline-start`  | `auto`    |
+| `--img-alt-button-inset-inline-end`    | `0.5rem`  |
+| `--img-alt-overlay-inset-block-start`  | `3.75rem` |
+| `--img-alt-overlay-inset-block-end`    | `0.5rem`  |
+| `--img-alt-overlay-inset-inline-start` | `0.5rem`  |
+| `--img-alt-overlay-inset-inline-end`   | `0.5rem`  |
+
+When both block insets have values, the dialog centers in the bounded area
+between them. Set the opposite inset to `auto` to anchor the natural-height
+area to one block edge instead. The same CSS positioning rules apply to the
+opener: when moving it to another corner, clear its opposing insets.
+The [repositioning demo](./demo/index.html#inset-example) moves the opener to
+block end/inline start and leaves room for it below the overlay.
+
+For a panel anchored to block end and both inline edges:
+
+```css
+img-alt-overlay.bottom-panel {
+  --img-alt-overlay-inset-block-start: auto;
+  --img-alt-overlay-inset-block-end: 0;
+  --img-alt-overlay-inset-inline-start: 0;
+  --img-alt-overlay-inset-inline-end: 0;
+}
+
+img-alt-overlay.bottom-panel [data-alt-ui] {
+  max-block-size: calc(100% - 3.75rem);
+}
+```
+
+The height limit leaves room for the default opener when text needs to scroll.
+The [slide-in demo](./demo/index.html#slide-up-example) adds a CSS keyframe
+animation to this layout. It clips motion within the image and skips animation
+when the reader requests reduced motion. Closing stays immediate.
 
 Keep visible focus indicators, legible contrast, and a reachable Close control.
 Don’t override the native dialog’s closed-state visibility. If you manually

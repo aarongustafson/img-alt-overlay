@@ -84,6 +84,24 @@ describe('package contracts', () => {
 		const css = readFileSync('img-alt-overlay.css', 'utf8');
 		for (const property of declaration.cssProperties)
 			expect(css).toContain(property.name);
+		const sides = [
+			'block-start',
+			'block-end',
+			'inline-start',
+			'inline-end',
+		];
+		for (const [target, defaults] of [
+			['button', ['0.5rem', 'auto', 'auto', '0.5rem']],
+			['overlay', ['3.75rem', '0.5rem', '0.5rem', '0.5rem']],
+		]) {
+			for (const [index, side] of sides.entries()) {
+				const name = `--img-alt-${target}-inset-${side}`;
+				expect(declaration.cssProperties).toContainEqual(
+					expect.objectContaining({ name, default: defaults[index] }),
+				);
+				expect(css).toContain(`var(${name}, ${defaults[index]})`);
+			}
+		}
 	});
 });
 

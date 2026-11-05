@@ -408,3 +408,98 @@ for (const width of [1280, 320]) {
 		await expect(dialog).not.toBeVisible();
 	});
 }
+
+test('logical inset properties independently position the button and all four overlay edges', async ({
+	page,
+}) => {
+	const host = page.locator('#basic');
+	await host.evaluate((node) => {
+		for (const [name, value] of Object.entries({
+			'--img-alt-button-inset-block-start': 'auto',
+			'--img-alt-button-inset-block-end': '12px',
+			'--img-alt-button-inset-inline-start': '16px',
+			'--img-alt-button-inset-inline-end': 'auto',
+			'--img-alt-overlay-inset-block-start': '10px',
+			'--img-alt-overlay-inset-block-end': '14px',
+			'--img-alt-overlay-inset-inline-start': '20px',
+			'--img-alt-overlay-inset-inline-end': '24px',
+		}))
+			node.style.setProperty(name, value);
+	});
+	const image = await host.locator('img').boundingBox();
+	const button = await host.locator('[data-alt-trigger]').boundingBox();
+	const area = await host.locator('[data-alt-ui]').boundingBox();
+	expect(button.x - image.x).toBeCloseTo(16, 0);
+	expect(image.y + image.height - button.y - button.height).toBeCloseTo(
+		12,
+		0,
+	);
+	expect(area.x - image.x).toBeCloseTo(20, 0);
+	expect(area.y - image.y).toBeCloseTo(10, 0);
+	expect(image.x + image.width - area.x - area.width).toBeCloseTo(24, 0);
+	expect(image.y + image.height - area.y - area.height).toBeCloseTo(14, 0);
+});
+
+test('logical inline inset properties follow right-to-left direction', async ({
+	page,
+}) => {
+	const host = page.locator('#arabic');
+	await host.evaluate((node) => {
+		node.style.setProperty('--img-alt-button-inset-inline-end', '20px');
+		node.style.setProperty('--img-alt-overlay-inset-inline-start', '12px');
+		node.style.setProperty('--img-alt-overlay-inset-inline-end', '18px');
+	});
+	const image = await host.locator('img').boundingBox();
+	const button = await host.locator('[data-alt-trigger]').boundingBox();
+	const area = await host.locator('[data-alt-ui]').boundingBox();
+	expect(button.x - image.x).toBeCloseTo(20, 0);
+	expect(area.x - image.x).toBeCloseTo(18, 0);
+	expect(image.x + image.width - area.x - area.width).toBeCloseTo(12, 0);
+});
+
+for (const width of [1280, 320]) {
+	for (const reducedMotion of ['no-preference', 'reduce']) {
+		test(`CSS slide-up demo anchors at block end and inline edges at ${width}px with motion ${reducedMotion}`, async ({
+			page,
+		}) => {
+			await page.setViewportSize({ width, height: 900 });
+			await page.emulateMedia({ reducedMotion });
+			const host = page.locator('#slide-up');
+			await host.locator('[data-alt-trigger]').click();
+			const dialog = host.locator('dialog');
+			const animated = await dialog.evaluate((node) => {
+				const animations = node.getAnimations();
+				if (!animations.length) return { count: 0 };
+				const animation = animations[0];
+				animation.pause();
+				animation.currentTime = 0;
+				const displacement = new DOMMatrixReadOnly(
+					getComputedStyle(node).transform,
+				).m42;
+				const name = getComputedStyle(node).animationName;
+				animation.finish();
+				return { count: animations.length, displacement, name };
+			});
+			if (reducedMotion === 'reduce') expect(animated.count).toBe(0);
+			else {
+				expect(animated.count).toBe(1);
+				expect(animated.displacement).toBeGreaterThan(0);
+				expect(animated.name).toBe('img-alt-demo-slide-in');
+			}
+			const image = await host.locator('img').boundingBox();
+			const panel = await dialog.boundingBox();
+			expect(panel.x).toBeCloseTo(image.x, 0);
+			expect(panel.width).toBeCloseTo(image.width, 0);
+			expect(panel.y + panel.height).toBeCloseTo(
+				image.y + image.height,
+				0,
+			);
+			await expect(host.locator('[data-alt-ui]')).toHaveCSS(
+				'overflow',
+				'clip',
+			);
+			await host.locator('[data-alt-trigger]').click();
+			await expect(dialog).not.toBeVisible();
+		});
+	}
+}

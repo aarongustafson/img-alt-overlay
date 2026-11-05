@@ -191,6 +191,48 @@
 						</img-alt-overlay>
 					</div>
 				</div>
+				<h3 id="inset-example">Set all four logical insets</h3>
+				<p>
+					Use <code>--img-alt-button-inset-*</code> and
+					<code>--img-alt-overlay-inset-*</code> to position the
+					opener and overlay area independently. Each supports
+					<code>block-start</code>, <code>block-end</code>,
+					<code>inline-start</code>, and <code>inline-end</code>.
+					Inline sides follow the writing direction. Set the opposing
+					side to <code>auto</code> when moving a button to another
+					edge.
+				</p>
+				<p>
+					Defaults place the opener 0.5rem from block start and inline
+					end. The overlay area starts 3.75rem from block start,
+					leaving room for the opener, with 0.5rem on its other edges.
+					The panel is centered inside that area. This example puts
+					the opener at block end/inline start and reserves space for
+					it below the panel.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>img-alt-overlay.repositioned {
+  --img-alt-button-inset-block-start: auto;
+  --img-alt-button-inset-block-end: 0.75rem;
+  --img-alt-button-inset-inline-start: 0.75rem;
+  --img-alt-button-inset-inline-end: auto;
+  --img-alt-overlay-inset-block-start: 0.75rem;
+  --img-alt-overlay-inset-block-end: 4rem;
+  --img-alt-overlay-inset-inline-start: 0.75rem;
+  --img-alt-overlay-inset-inline-end: 0.75rem;
+}</code></pre>
+					<div class="demo">
+						<img-alt-overlay id="repositioned" class="repositioned">
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle beside a blue wall."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
 				<h3 id="site-style-example">Match the website overlay</h3>
 				<p>
 					Add <code>class="site-style"</code> to the wrapper for a
@@ -199,22 +241,17 @@
 					<a
 						href="https://www.aaron-gustafson.com/notebook/there-can-be-only-one-redux/"
 						>overlay on Aaron’s website</a
-					>. Removing the layout inset lets the panel reach both image
-					edges; the opener keeps its own inset and remains clickable.
+					>. Setting both inline insets to zero lets the panel reach
+					both image edges; the opener keeps its own inset and remains
+					clickable.
 				</p>
 				<div class="code-demo-pair">
 					<pre><code>img-alt-overlay.site-style {
   --img-alt-dialog-background: #000;
   --img-alt-dialog-color: #fff;
-}
-
-img-alt-overlay.site-style [data-alt-ui] {
-  inset: 0;
-}
-
-img-alt-overlay.site-style [data-alt-trigger] {
-  margin-block-start: 0.5rem;
-  margin-inline-end: 0.5rem;
+  --img-alt-overlay-inset-block-end: 0;
+  --img-alt-overlay-inset-inline-start: 0;
+  --img-alt-overlay-inset-inline-end: 0;
 }
 
 img-alt-overlay.site-style [data-alt-dialog] {
@@ -228,6 +265,57 @@ img-alt-overlay.site-style [data-alt-dialog] {
 								width="640"
 								height="360"
 								alt="A red bicycle against a blue wall. Two dark wheels rest on a pale pavement."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+				<h3 id="slide-up-example">Slide in from block end with CSS</h3>
+				<p>
+					This version uses <code>class="site-style slide-up"</code>.
+					It anchors the panel to block end and both inline edges,
+					then slides it up on opening. The clipping layer keeps the
+					animation inside the image. Reduced-motion preferences skip
+					the animation; closing is immediate. No JavaScript animation
+					code is involved.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>img-alt-overlay.slide-up {
+  --img-alt-overlay-inset-block-start: auto;
+  --img-alt-overlay-inset-block-end: 0;
+  --img-alt-overlay-inset-inline-start: 0;
+  --img-alt-overlay-inset-inline-end: 0;
+}
+
+img-alt-overlay.slide-up [data-alt-ui] {
+  max-block-size: calc(100% - 3.75rem);
+  overflow: clip;
+}
+
+img-alt-overlay.slide-up [data-alt-dialog] {
+  margin: 0;
+}
+
+@keyframes img-alt-demo-slide-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  img-alt-overlay.slide-up [data-alt-dialog][open] {
+    animation: img-alt-demo-slide-in 300ms ease-out;
+  }
+}</code></pre>
+					<div class="demo">
+						<img-alt-overlay
+							id="slide-up"
+							class="site-style slide-up"
+						>
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle with a basket stands beside a blue wall."
 								loading="lazy"
 							/>
 						</img-alt-overlay>
