@@ -244,6 +244,11 @@ The separate Close button is visually hidden until focused, but stays in the
 keyboard tab order and accessibility tree. It remains visible during pointer
 interaction once revealed. Without the stylesheet, it’s a normal visible button.
 
+The [website-style demo](./demo/index.html#site-style-example) shows a full-image-width,
+borderless black panel with white text. It removes the layout wrapper’s inset,
+keeps spacing around the opener, and themes only that instance through an
+authored class.
+
 Stable hooks:
 
 - `[data-alt-ui]`: positioned layout wrapper for the controls and panel.

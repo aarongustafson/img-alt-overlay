@@ -191,6 +191,48 @@
 						</img-alt-overlay>
 					</div>
 				</div>
+				<h3 id="site-style-example">Match the website overlay</h3>
+				<p>
+					Add <code>class="site-style"</code> to the wrapper for a
+					full-image-width panel with white text on black, no border,
+					and square corners, like the
+					<a
+						href="https://www.aaron-gustafson.com/notebook/there-can-be-only-one-redux/"
+						>overlay on Aaron’s website</a
+					>. Removing the layout inset lets the panel reach both image
+					edges; the opener keeps its own inset and remains clickable.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>img-alt-overlay.site-style {
+  --img-alt-dialog-background: #000;
+  --img-alt-dialog-color: #fff;
+}
+
+img-alt-overlay.site-style [data-alt-ui] {
+  inset: 0;
+}
+
+img-alt-overlay.site-style [data-alt-trigger] {
+  margin-block-start: 0.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+img-alt-overlay.site-style [data-alt-dialog] {
+  border: 0;
+  border-radius: 0;
+}</code></pre>
+					<div class="demo">
+						<img-alt-overlay id="site-style" class="site-style">
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle against a blue wall. Two dark wheels rest on a pale pavement."
+								loading="lazy"
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
 			</section>
 			<section class="demo-section">
 				<h2>Leave decorative images alone</h2>

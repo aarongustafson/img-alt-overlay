@@ -362,3 +362,49 @@ test('a narrow image shows the description rather than only its dialog heading',
 	expect(geometry.top).toBeGreaterThanOrEqual(geometry.panelTop);
 	expect(geometry.bottom).toBeLessThanOrEqual(geometry.panelBottom);
 });
+
+for (const width of [1280, 320]) {
+	test(`site-style overlay is full-width, borderless, white on black at ${width}px`, async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width, height: 900 });
+		const host = page.locator('#site-style');
+		const trigger = host.locator('[data-alt-trigger]');
+		await trigger.click();
+		const dialog = host.locator('dialog');
+		const image = await host.locator('img').boundingBox();
+		const panel = await dialog.boundingBox();
+		expect(panel.x).toBeCloseTo(image.x, 0);
+		expect(panel.width).toBeCloseTo(image.width, 0);
+		expect(panel.y).toBeGreaterThanOrEqual(image.y);
+		expect(panel.y + panel.height).toBeLessThanOrEqual(
+			image.y + image.height + 1,
+		);
+		expect(
+			await dialog.evaluate((node) => {
+				const style = getComputedStyle(node);
+				return {
+					color: style.color,
+					background: style.backgroundColor,
+					border: [
+						style.borderTopWidth,
+						style.borderRightWidth,
+						style.borderBottomWidth,
+						style.borderLeftWidth,
+					],
+					radius: style.borderRadius,
+				};
+			}),
+		).toEqual({
+			color: 'rgb(255, 255, 255)',
+			background: 'rgb(0, 0, 0)',
+			border: ['0px', '0px', '0px', '0px'],
+			radius: '0px',
+		});
+		await trigger.click();
+		await expect(dialog).not.toBeVisible();
+		await trigger.click();
+		await page.keyboard.press('Escape');
+		await expect(dialog).not.toBeVisible();
+	});
+}
