@@ -314,9 +314,18 @@ img-alt-overlay.bottom-panel [data-alt-ui] {
 ```
 
 The height limit leaves room for the default opener when text needs to scroll.
-The [slide-in demo](./demo/index.html#slide-up-example) adds a CSS keyframe
-animation to this layout. It clips motion within the image and skips animation
-when the reader requests reduced motion. Closing stays immediate.
+The [slide-in demo](./demo/index.html#slide-up-example) adds 300ms CSS transitions
+to this layout, sliding and fading the panel in and out. It clips motion within
+the image and skips transitions when the reader requests reduced motion.
+[`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style)
+defines the entry state, and a
+[`display` transition with `allow-discrete`](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior)
+keeps the closing panel rendered until the exit finishes. Browsers without
+discrete-transition support open and close it immediately. Some engines parse
+`allow-discrete` but can’t transition a native dialog’s `display`; those still
+animate entry but close immediately. This non-modal dialog
+doesn’t enter the top layer or use a backdrop, so it needs no `overlay` or
+`::backdrop` transition. The component’s default stylesheet adds no motion.
 
 Keep visible focus indicators, legible contrast, and a reachable Close control.
 Don’t override the native dialog’s closed-state visibility. If you manually

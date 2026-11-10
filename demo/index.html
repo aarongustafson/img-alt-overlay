@@ -274,10 +274,13 @@ img-alt-overlay.site-style [data-alt-dialog] {
 				<p>
 					This version uses <code>class="site-style slide-up"</code>.
 					It anchors the panel to block end and both inline edges,
-					then slides it up on opening. The clipping layer keeps the
-					animation inside the image. Reduced-motion preferences skip
-					the animation; closing is immediate. No JavaScript animation
-					code is involved.
+					then slides and fades it in and out over 300ms. The clipping
+					layer keeps the motion inside the image.
+					<code>@starting-style</code> defines the entry state, and
+					<code>allow-discrete</code> keeps the dialog rendered until
+					the exit finishes in supporting browsers; otherwise closing
+					is immediate. Reduced-motion preferences skip the
+					transitions. No JavaScript animation code is involved.
 				</p>
 				<div class="code-demo-pair">
 					<pre><code>img-alt-overlay.slide-up {
@@ -296,14 +299,26 @@ img-alt-overlay.slide-up [data-alt-dialog] {
   margin: 0;
 }
 
-@keyframes img-alt-demo-slide-in {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
 @media (prefers-reduced-motion: no-preference) {
+  img-alt-overlay.slide-up [data-alt-dialog] {
+    opacity: 0;
+    transform: translateY(100%);
+    transition:
+      display 300ms allow-discrete,
+      opacity 300ms ease,
+      transform 300ms ease;
+  }
+
   img-alt-overlay.slide-up [data-alt-dialog][open] {
-    animation: img-alt-demo-slide-in 300ms ease-out;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    img-alt-overlay.slide-up [data-alt-dialog][open] {
+      opacity: 0;
+      transform: translateY(100%);
+    }
   }
 }</code></pre>
 					<div class="demo">

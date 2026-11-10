@@ -464,28 +464,81 @@ for (const width of [1280, 320]) {
 		}) => {
 			await page.setViewportSize({ width, height: 900 });
 			await page.emulateMedia({ reducedMotion });
+			const exitSupported = await page.evaluate(async () => {
+				const probe = document.createElement('dialog');
+				probe.style.transition = 'display 1s allow-discrete';
+				document.body.append(probe);
+				try {
+					probe.show();
+					probe.getBoundingClientRect();
+					await new Promise((resolve) =>
+						requestAnimationFrame(() =>
+							requestAnimationFrame(resolve),
+						),
+					);
+					probe.close();
+					return probe
+						.getAnimations()
+						.some(
+							(animation) =>
+								animation.transitionProperty === 'display',
+						);
+				} finally {
+					probe.remove();
+				}
+			});
+			if (reducedMotion === 'no-preference' && !exitSupported) {
+				test.info().annotations.push({
+					type: 'browser limitation',
+					description:
+						'Native dialog display transitions are unavailable; closing must remain immediate.',
+				});
+			}
 			const host = page.locator('#slide-up');
-			await host.locator('[data-alt-trigger]').click();
+			const trigger = host.locator('[data-alt-trigger]');
 			const dialog = host.locator('dialog');
+			await dialog.evaluate((node) => {
+				node.addEventListener('transitionrun', () => {
+					for (const animation of node.getAnimations())
+						animation.pause();
+				});
+			});
+			await trigger.focus();
+			await trigger.press('Enter');
 			const animated = await dialog.evaluate((node) => {
 				const animations = node.getAnimations();
 				if (!animations.length) return { count: 0 };
-				const animation = animations[0];
-				animation.pause();
-				animation.currentTime = 0;
+				for (const animation of animations) {
+					animation.pause();
+					animation.currentTime = 150;
+				}
+				const opacity = Number(getComputedStyle(node).opacity);
 				const displacement = new DOMMatrixReadOnly(
 					getComputedStyle(node).transform,
 				).m42;
-				const name = getComputedStyle(node).animationName;
-				animation.finish();
-				return { count: animations.length, displacement, name };
+				const properties = animations.map(
+					(animation) => animation.transitionProperty,
+				);
+				for (const animation of animations) animation.finish();
+				return {
+					count: animations.length,
+					displacement,
+					opacity,
+					properties,
+					height: node.getBoundingClientRect().height,
+				};
 			});
 			if (reducedMotion === 'reduce') expect(animated.count).toBe(0);
 			else {
-				expect(animated.count).toBe(1);
+				expect(animated.properties).toEqual(
+					expect.arrayContaining(['opacity', 'transform']),
+				);
+				expect(animated.opacity).toBeGreaterThan(0);
+				expect(animated.opacity).toBeLessThan(1);
 				expect(animated.displacement).toBeGreaterThan(0);
-				expect(animated.name).toBe('img-alt-demo-slide-in');
+				expect(animated.displacement).toBeLessThan(animated.height);
 			}
+			await expect(dialog).toHaveCSS('opacity', '1');
 			const image = await host.locator('img').boundingBox();
 			const panel = await dialog.boundingBox();
 			expect(panel.x).toBeCloseTo(image.x, 0);
@@ -498,7 +551,69 @@ for (const width of [1280, 320]) {
 				'overflow',
 				'clip',
 			);
-			await host.locator('[data-alt-trigger]').click();
+			await trigger.focus();
+			await trigger.press('Enter');
+			await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+			await expect(trigger).toBeFocused();
+			const closing = await dialog.evaluate((node) => {
+				const animations = node.getAnimations();
+				for (const animation of animations) {
+					animation.pause();
+					animation.currentTime = 150;
+				}
+				const style = getComputedStyle(node);
+				const close = node.querySelector('[data-alt-close]');
+				close.focus();
+				return {
+					open: node.open,
+					closedControlFocused:
+						node.ownerDocument.activeElement === close,
+					display: style.display,
+					opacity: Number(style.opacity),
+					displacement: new DOMMatrixReadOnly(style.transform).m42,
+					properties: animations.map(
+						(animation) => animation.transitionProperty,
+					),
+				};
+			});
+			expect(closing.open).toBe(false);
+			expect(closing.closedControlFocused).toBe(false);
+			if (reducedMotion === 'reduce' || !exitSupported) {
+				expect(closing.properties).toEqual([]);
+				expect(closing.display).toBe('none');
+			} else {
+				expect(closing.properties).toEqual(
+					expect.arrayContaining(['display', 'opacity', 'transform']),
+				);
+				expect(closing.display).not.toBe('none');
+				expect(closing.opacity).toBeGreaterThan(0);
+				expect(closing.opacity).toBeLessThan(1);
+				expect(closing.displacement).toBeGreaterThan(0);
+				expect(closing.displacement).toBeLessThan(panel.height);
+				const reopening = await dialog.evaluate((node) => {
+					node.closest('img-alt-overlay')
+						.querySelector('[data-alt-trigger]')
+						.click();
+					const animations = node.getAnimations();
+					for (const animation of animations) {
+						animation.pause();
+						animation.currentTime = 0;
+					}
+					const opacity = Number(getComputedStyle(node).opacity);
+					for (const animation of animations) animation.finish();
+					return { open: node.open, opacity };
+				});
+				expect(reopening.open).toBe(true);
+				expect(reopening.opacity).toBeCloseTo(closing.opacity, 2);
+				await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+				await page.keyboard.press('Escape');
+				await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+				await dialog.evaluate((node) => {
+					for (const animation of node.getAnimations())
+						animation.finish();
+				});
+				await expect(trigger).toBeFocused();
+			}
 			await expect(dialog).not.toBeVisible();
 		});
 	}
