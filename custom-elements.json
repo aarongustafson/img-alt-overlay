@@ -1,6 +1,6 @@
 {
 	"schemaVersion": "1.0.0",
-	"readme": "",
+	"readme": "README.md",
 	"modules": [
 		{
 			"kind": "javascript-module",
@@ -8,22 +8,178 @@
 			"declarations": [
 				{
 					"kind": "class",
-					"description": "Reveal an image’s alternative text in a styleable disclosure overlay",
 					"name": "ImgAltOverlayElement",
-					"members": [],
-					"events": [],
-					"attributes": [],
-					"superclass": {
-						"name": "HTMLElement"
-					},
+					"description": "A light-DOM image wrapper with a non-modal, in-image alt-text dialog, custom toggle command, native closing command, and JavaScript command fallback. The opener reflects aria-expanded; the default stylesheet reveals the separate Close control on focus.",
 					"tagName": "img-alt-overlay",
-					"customElement": true
+					"customElement": true,
+					"superclass": { "name": "HTMLElement" },
+					"attributes": [
+						{
+							"name": "button-label",
+							"description": "Visible and accessible opener label. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"View alt text\""
+						},
+						{
+							"name": "dialog-label",
+							"description": "Dialog heading and accessible dialog name. Visually hidden by the default stylesheet. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"Image description\""
+						},
+						{
+							"name": "close-label",
+							"description": "Dismissal label for the opener while open and for the separate Close button. Must be nonempty.",
+							"type": { "text": "string" },
+							"default": "\"Close\""
+						}
+					],
+					"members": [
+						{
+							"kind": "field",
+							"name": "state",
+							"readonly": true,
+							"type": {
+								"text": "'idle' | 'inactive' | 'ready' | 'error'"
+							},
+							"description": "Current enhancement state.",
+							"default": "\"idle\""
+						},
+						{
+							"kind": "method",
+							"name": "refresh",
+							"description": "Closes any open dialog, restores authored markup, and rereads image structure and labels.",
+							"return": { "type": { "text": "void" } }
+						}
+					],
+					"events": [
+						{
+							"name": "img-alt-overlay:ready",
+							"type": { "text": "CustomEvent<void>" },
+							"description": "Bubbles when a new set of usable controls has been created."
+						},
+						{
+							"name": "img-alt-overlay:error",
+							"type": { "text": "CustomEvent<{ error: Error }>" },
+							"description": "Bubbles on configuration or setup failure. Authored content remains intact."
+						}
+					],
+					"cssProperties": [
+						{
+							"name": "--img-alt-button-inset-block-start",
+							"default": "0.5rem",
+							"description": "Logical block-start inset of the independently positioned opener."
+						},
+						{
+							"name": "--img-alt-button-inset-block-end",
+							"default": "auto",
+							"description": "Logical block-end inset of the opener. Unset block-start to auto when anchoring here."
+						},
+						{
+							"name": "--img-alt-button-inset-inline-start",
+							"default": "auto",
+							"description": "Logical inline-start inset of the opener."
+						},
+						{
+							"name": "--img-alt-button-inset-inline-end",
+							"default": "0.5rem",
+							"description": "Logical inline-end inset of the opener."
+						},
+						{
+							"name": "--img-alt-overlay-inset-block-start",
+							"default": "3.75rem",
+							"description": "Logical block-start inset of the overlay area. Default reserves room below the opener."
+						},
+						{
+							"name": "--img-alt-overlay-inset-block-end",
+							"default": "0.5rem",
+							"description": "Logical block-end inset of the overlay area."
+						},
+						{
+							"name": "--img-alt-overlay-inset-inline-start",
+							"default": "0.5rem",
+							"description": "Logical inline-start inset of the overlay area."
+						},
+						{
+							"name": "--img-alt-overlay-inset-inline-end",
+							"default": "0.5rem",
+							"description": "Logical inline-end inset of the overlay area."
+						},
+						{
+							"name": "--img-alt-button-color",
+							"default": "#fff",
+							"description": "Opener and close-button text color in the optional stylesheet."
+						},
+						{
+							"name": "--img-alt-button-background",
+							"default": "#111",
+							"description": "Opener and close-button background."
+						},
+						{
+							"name": "--img-alt-dialog-color",
+							"default": "CanvasText",
+							"description": "Dialog text color."
+						},
+						{
+							"name": "--img-alt-dialog-background",
+							"default": "Canvas",
+							"description": "Dialog background."
+						},
+						{
+							"name": "--img-alt-focus-color",
+							"default": "Highlight",
+							"description": "Visible focus outline color."
+						}
+					]
 				}
 			],
 			"exports": [
 				{
 					"kind": "js",
 					"name": "ImgAltOverlayElement",
+					"declaration": {
+						"name": "ImgAltOverlayElement",
+						"module": "img-alt-overlay.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "index.js",
+			"exports": [
+				{
+					"kind": "js",
+					"name": "ImgAltOverlayElement",
+					"declaration": {
+						"name": "ImgAltOverlayElement",
+						"module": "img-alt-overlay.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "define.js",
+			"declarations": [
+				{
+					"kind": "function",
+					"name": "defineImgAltOverlay",
+					"description": "Registers img-alt-overlay when a browser registry exists; also called on import.",
+					"return": { "type": { "text": "boolean" } }
+				}
+			],
+			"exports": [
+				{
+					"kind": "js",
+					"name": "defineImgAltOverlay",
+					"declaration": {
+						"name": "defineImgAltOverlay",
+						"module": "define.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "img-alt-overlay",
 					"declaration": {
 						"name": "ImgAltOverlayElement",
 						"module": "img-alt-overlay.js"

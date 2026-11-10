@@ -1,6 +1,7 @@
 import { ImgAltOverlayElement } from './img-alt-overlay.js';
 
-export function defineComponentName(tagName = 'img-alt-overlay') {
+export function defineImgAltOverlay() {
+	const tagName = 'img-alt-overlay';
 	const hasWindow = typeof window !== 'undefined';
 	const registry = hasWindow ? window.customElements : undefined;
 
@@ -15,4 +16,4 @@ export function defineComponentName(tagName = 'img-alt-overlay') {
 	return true;
 }
 
-defineComponentName();
+defineImgAltOverlay();

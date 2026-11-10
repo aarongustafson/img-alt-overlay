@@ -5,21 +5,54 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay via esm.sh</title>
 		<link rel="stylesheet" href="./styles.css" />
-		<style>
-			/* Demo-specific styles */
-		</style>
+		<link rel="stylesheet" href="../img-alt-overlay.css" />
 	</head>
 	<body>
-		<h1>esm.sh CDN sanity check</h1>
-		<p>
-			This page loads the component class from <code>esm.sh</code> and
-			registers it manually.
-		</p>
+		<header>
+			<h1>&lt;img-alt-overlay&gt; via esm.sh</h1>
+			<p>
+				A class-only import with manual registration. See the
+				<a href="../README.md">README</a>.
+			</p>
+		</header>
+		<main>
+			<section class="demo-section">
+				<h2>Import and register the class</h2>
+				<p>
+					This pinned URL works after this version is published. If
+					loading fails, the image stays visible and no nonfunctional
+					controls appear.
+				</p>
+				<div class="code-demo-pair">
+					<pre><code>import { ImgAltOverlayElement } from
+  'https://esm.sh/@aarongustafson/img-alt-overlay@0.0.1/img-alt-overlay.js?bundle&amp;target=es2022';
 
-		<img-alt-overlay>
-			<p>Replace this markup once you customize img-alt-overlay.</p>
-		</img-alt-overlay>
-
+customElements.define(
+  'img-alt-overlay', ImgAltOverlayElement
+);</code></pre>
+					<div class="demo">
+						<img-alt-overlay>
+							<img
+								src="./bicycle.svg"
+								width="640"
+								height="360"
+								alt="A red bicycle beside a blue wall, with a basket on its handlebars."
+							/>
+						</img-alt-overlay>
+					</div>
+				</div>
+			</section>
+		</main>
+		<footer>
+			<p>
+				Made with ❤️ by
+				<a href="https://github.com/aarongustafson">Aaron Gustafson</a>.
+				View the source on
+				<a href="https://github.com/aarongustafson/img-alt-overlay"
+					>GitHub</a
+				>.
+			</p>
+		</footer>
 		<script type="module">
 			import { ImgAltOverlayElement } from 'https://esm.sh/@aarongustafson/img-alt-overlay@0.0.1/img-alt-overlay.js?bundle&target=es2022';
 
