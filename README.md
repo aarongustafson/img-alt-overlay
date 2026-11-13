@@ -1,5 +1,11 @@
 # img-alt-overlay
 
+[![npm version](https://img.shields.io/npm/v/@aarongustafson/img-alt-overlay.svg)](https://www.npmjs.com/package/@aarongustafson/img-alt-overlay)
+[![CI status](https://img.shields.io/github/actions/workflow/status/aarongustafson/img-alt-overlay/ci.yml?branch=main&label=CI)](https://github.com/aarongustafson/img-alt-overlay/actions/workflows/ci.yml)
+[![Minified + gzipped size](https://img.shields.io/bundlejs/size/@aarongustafson/img-alt-overlay?format=minzip&label=min%2Bgzip)](https://bundlejs.com/?q=@aarongustafson/img-alt-overlay)
+[![License](https://img.shields.io/npm/l/@aarongustafson/img-alt-overlay)](https://github.com/aarongustafson/img-alt-overlay/blob/main/LICENSE)
+[![Type definitions](https://img.shields.io/npm/types/@aarongustafson/img-alt-overlay)](https://github.com/aarongustafson/img-alt-overlay/blob/main/img-alt-overlay.d.ts)
+
 `<img-alt-overlay>` wraps an image and adds a button that reveals its alternative
 text in a non-modal dialog over the image. It leaves the image, its `alt` attribute, responsive
 sources, and links alone. Without JavaScript, the original image still works.
