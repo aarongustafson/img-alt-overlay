@@ -65,7 +65,10 @@ img-alt-overlay [data-alt-dialog] {
 	inline-size: 100%;
 	max-inline-size: 100%;
 	max-block-size: 100%;
-	min-block-size: min(var(--img-alt-dialog-min-block-size, 30%), 100%);
+	min-block-size: min(
+		max(var(--img-alt-dialog-min-block-size, 30%), 4rem),
+		100%
+	);
 	overflow: auto;
 	overscroll-behavior: contain;
 	color: var(--img-alt-dialog-color, CanvasText);

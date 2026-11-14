@@ -275,6 +275,8 @@ Use `--img-alt-dialog-min-block-size` to change the panel’s minimum height.
 The default is `30%` of the available image-overlay area, rather than the whole
 image; the opener’s reserved space is outside that area. The minimum is capped
 at the available area so small images and long descriptions remain bounded.
+When space permits, a `4rem` floor keeps the Close button and its focus ring
+inside the panel, even with a short description or a smaller configured minimum.
 The percentage-based cap requires an overlay area with a definite block size,
 even when the custom property contains a length. For an auto-sized,
 edge-anchored area, set the dialog’s `min-block-size` directly instead, as in

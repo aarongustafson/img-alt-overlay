@@ -12,7 +12,7 @@ let nextId = 0;
  * @cssprop --img-alt-overlay-inset-block-end - Overlay area block-end inset (0.5rem).
  * @cssprop --img-alt-overlay-inset-inline-start - Overlay area inline-start inset (0.5rem).
  * @cssprop --img-alt-overlay-inset-inline-end - Overlay area inline-end inset (0.5rem).
- * @cssprop --img-alt-dialog-min-block-size - Dialog minimum block size within the overlay area (30%).
+ * @cssprop --img-alt-dialog-min-block-size - Dialog minimum block size within the overlay area (30%, with a 4rem control-sized floor when space permits).
  */
 export class ImgAltOverlayElement extends BaseElement {
 	static observedAttributes = ['button-label', 'dialog-label', 'close-label'];
