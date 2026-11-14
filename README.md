@@ -134,8 +134,13 @@ The component adds light-DOM markup equivalent to:
   >
     <h2 id="image-alt-heading">Image description</h2>
     <p tabindex="-1" autofocus>The image’s alternative text.</p>
-    <button type="button" commandfor="image-alt-dialog" command="close">
-      Close
+    <button
+      type="button"
+      commandfor="image-alt-dialog"
+      command="close"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">✕</span>
     </button>
   </dialog>
 </div>
@@ -162,11 +167,11 @@ There’s no dialog polyfill, popover mode, image enlargement, or remote request
 
 ## Labels and configuration
 
-| Attribute      | Default             | Purpose                                                                       |
-| -------------- | ------------------- | ----------------------------------------------------------------------------- |
-| `button-label` | `View alt text`     | Visible and accessible name of the opener                                     |
-| `dialog-label` | `Image description` | Dialog heading and accessible name; visually hidden by the default stylesheet |
-| `close-label`  | `Close`             | Dismissal wording for the open-state opener and the keyboard Close button     |
+| Attribute      | Default             | Purpose                                                                                  |
+| -------------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| `button-label` | `View alt text`     | Visible and accessible name of the opener                                                |
+| `dialog-label` | `Image description` | Dialog heading and accessible name; visually hidden by the default stylesheet            |
+| `close-label`  | `Close`             | Dismissal wording for the open-state opener and accessible name of the icon Close button |
 
 Authored attributes override defaults. All labels must contain non-whitespace
 text. Labels and alt text are inserted as plain text, never interpreted as HTML.
@@ -253,9 +258,29 @@ wrap and scroll inside the panel; it moves with the image as the page scrolls
 or resizes. The layout layer lets pointer clicks pass through to the image or
 its link outside the controls and open panel.
 
-The separate Close button is visually hidden until focused, but stays in the
-keyboard tab order and accessibility tree. It remains visible during pointer
-interaction once revealed. Without the stylesheet, it’s a normal visible button.
+The description stays centered across and along the panel, with no paragraph
+margin or visible focus ring. It still receives initial focus so the browser can
+present the dialog and its text. Long content starts at the top and scrolls
+rather than being clipped above the panel.
+
+The separate Close button is a ✕ with its accessible name taken from
+`close-label`. It stays visually hidden until focused and remains in the keyboard
+tab order and accessibility tree. When revealed, it sits at the dialog’s block
+start/inline end, has a 44px minimum target at the default font size, and keeps
+its visible focus ring. Its space is reserved, so revealing it doesn’t enlarge
+the panel or cover the text. It remains visible during pointer interaction once
+revealed. Without the stylesheet, the icon button stays visible in normal flow.
+
+Use `--img-alt-dialog-min-block-size` to change the panel’s minimum height.
+The default is `30%` of the available image-overlay area, rather than the whole
+image; the opener’s reserved space is outside that area. The minimum is capped
+at the available area so small images and long descriptions remain bounded.
+When space permits, a `4rem` floor keeps the Close button and its focus ring
+inside the panel, even with a short description or a smaller configured minimum.
+The percentage-based cap requires an overlay area with a definite block size,
+even when the custom property contains a length. For an auto-sized,
+edge-anchored area, set the dialog’s `min-block-size` directly instead, as in
+the example below.
 
 The [website-style demo](./demo/index.html#site-style-example) shows a full-image-width,
 borderless black panel with white text. It sets the overlay’s inline insets to
@@ -270,13 +295,14 @@ Stable hooks:
 - `[data-alt-text]`: alternative-text paragraph.
 - `[data-alt-close]`: close button.
 
-| CSS custom property           | Default      |
-| ----------------------------- | ------------ |
-| `--img-alt-button-color`      | `#fff`       |
-| `--img-alt-button-background` | `#111`       |
-| `--img-alt-dialog-color`      | `CanvasText` |
-| `--img-alt-dialog-background` | `Canvas`     |
-| `--img-alt-focus-color`       | `Highlight`  |
+| CSS custom property               | Default      |
+| --------------------------------- | ------------ |
+| `--img-alt-button-color`          | `#fff`       |
+| `--img-alt-button-background`     | `#111`       |
+| `--img-alt-dialog-color`          | `CanvasText` |
+| `--img-alt-dialog-background`     | `Canvas`     |
+| `--img-alt-focus-color`           | `Highlight`  |
+| `--img-alt-dialog-min-block-size` | `30%`        |
 
 ### Position the opener and overlay
 
@@ -317,9 +343,15 @@ img-alt-overlay.bottom-panel {
 img-alt-overlay.bottom-panel [data-alt-ui] {
   max-block-size: calc(100% - 3.75rem);
 }
+
+img-alt-overlay.bottom-panel [data-alt-dialog] {
+  min-block-size: 4rem;
+}
 ```
 
 The height limit leaves room for the default opener when text needs to scroll.
+The minimum height fits the Close button and its focus ring even when the
+description is short.
 The [slide-in demo](./demo/index.html#slide-up-example) adds 300ms CSS transitions
 to this layout, sliding and fading the panel in and out. It clips motion within
 the image and skips transitions when the reader requests reduced motion.

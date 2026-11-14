@@ -78,6 +78,7 @@ figcaption {
 }
 
 img-alt-overlay.bright {
+	--img-alt-dialog-min-block-size: 45%;
 	--img-alt-button-background: #fff;
 	--img-alt-button-color: #132d46;
 	--img-alt-dialog-background: #f0f7ff;
@@ -121,6 +122,7 @@ img-alt-overlay.slide-up [data-alt-ui] {
 }
 
 img-alt-overlay.slide-up [data-alt-dialog] {
+	min-block-size: 4rem;
 	margin: 0;
 }
 
