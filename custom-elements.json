@@ -28,7 +28,7 @@
 						},
 						{
 							"name": "close-label",
-							"description": "Dismissal label for the opener while open and for the separate Close button. Must be nonempty.",
+							"description": "Dismissal wording for the opener while open and accessible name of the separate icon Close button. Must be nonempty.",
 							"type": { "text": "string" },
 							"default": "\"Close\""
 						}
@@ -64,6 +64,11 @@
 						}
 					],
 					"cssProperties": [
+						{
+							"name": "--img-alt-dialog-min-block-size",
+							"default": "30%",
+							"description": "Minimum dialog block size within the available overlay area, capped at that area's size. Accepts CSS lengths or percentages and requires a definite overlay block size. For auto-sized, edge-anchored areas, set the dialog's min-block-size directly."
+						},
 						{
 							"name": "--img-alt-button-inset-block-start",
 							"default": "0.5rem",
@@ -107,12 +112,12 @@
 						{
 							"name": "--img-alt-button-color",
 							"default": "#fff",
-							"description": "Opener and close-button text color in the optional stylesheet."
+							"description": "Opener text color in the optional stylesheet."
 						},
 						{
 							"name": "--img-alt-button-background",
 							"default": "#111",
-							"description": "Opener and close-button background."
+							"description": "Opener background."
 						},
 						{
 							"name": "--img-alt-dialog-color",

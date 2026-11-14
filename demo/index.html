@@ -25,8 +25,9 @@
 				nonempty alt text. The non-modal dialog stays over the image;
 				the rest of the page remains interactive and Tab can leave the
 				panel. Click the opener again, or press Escape while focus is
-				inside the wrapper, to dismiss it. The separate Close button
-				appears when it receives keyboard focus.
+				inside the wrapper, to dismiss it. The separate ✕ Close button
+				appears in the dialog’s corner when it receives keyboard focus,
+				without changing the panel’s size.
 			</p>
 			<noscript
 				><p>
@@ -168,12 +169,16 @@
 			<section class="demo-section">
 				<h2>Theme the overlay</h2>
 				<p>
-					The optional stylesheet uses logical positioning and stable
-					light-DOM hooks. Without it, the same native dialog works
-					with browser-default presentation.
+					The optional stylesheet centers the description and gives
+					the panel a minimum block size of 30% of its available
+					image-overlay area. Override it with
+					<code>--img-alt-dialog-min-block-size</code>; this example
+					uses 45%. Without the stylesheet, the same native dialog
+					works with browser-default presentation.
 				</p>
 				<div class="code-demo-pair">
 					<pre><code>img-alt-overlay.bright {
+  --img-alt-dialog-min-block-size: 45%;
   --img-alt-button-background: #fff;
   --img-alt-button-color: #132d46;
   --img-alt-dialog-background: #f0f7ff;
@@ -275,7 +280,9 @@ img-alt-overlay.site-style [data-alt-dialog] {
 					This version uses <code>class="site-style slide-up"</code>.
 					It anchors the panel to block end and both inline edges,
 					then slides and fades it in and out over 300ms. The clipping
-					layer keeps the motion inside the image.
+					layer keeps the motion inside the image. A 4rem minimum
+					block size leaves room for the Close button and its focus
+					ring, even with a short description.
 					<code>@starting-style</code> defines the entry state, and
 					<code>allow-discrete</code> keeps the dialog rendered until
 					the exit finishes in supporting browsers; otherwise closing
@@ -296,6 +303,7 @@ img-alt-overlay.slide-up [data-alt-ui] {
 }
 
 img-alt-overlay.slide-up [data-alt-dialog] {
+  min-block-size: 4rem;
   margin: 0;
 }
 

@@ -340,6 +340,92 @@ test('Close is visually hidden until focused, but stays keyboard reachable', asy
 	await expect(page.locator('#basic dialog')).not.toBeVisible();
 });
 
+test('description has no margin or focus ring and centers inside an overridable minimum panel', async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 900 });
+	const host = page.locator('#basic');
+	await host.locator('img').evaluate((image) => {
+		image.alt = 'A bicycle.';
+	});
+	await host.locator('[data-alt-trigger]').focus();
+	await page.keyboard.press('Enter');
+	const dialog = host.locator('dialog');
+	const text = host.locator('[data-alt-text]');
+	await expect(text).toBeFocused();
+	await expect(text).toHaveCSS('margin-block-end', '0px');
+	await expect(text).toHaveCSS('outline-style', 'none');
+	await expect(text).toHaveCSS('text-align', 'center');
+	const area = await host.locator('[data-alt-ui]').boundingBox();
+	const panel = await dialog.boundingBox();
+	const description = await text.boundingBox();
+	expect(panel.height).toBeCloseTo(area.height * 0.3, 0);
+	expect(description.x + description.width / 2).toBeCloseTo(
+		panel.x + panel.width / 2,
+		0,
+	);
+	expect(description.y + description.height / 2).toBeCloseTo(
+		panel.y + panel.height / 2,
+		0,
+	);
+	await host.evaluate((node) => {
+		node.style.setProperty('--img-alt-dialog-min-block-size', '55%');
+	});
+	expect((await dialog.boundingBox()).height).toBeCloseTo(
+		area.height * 0.55,
+		0,
+	);
+	await host.evaluate((node) => {
+		node.style.setProperty('--img-alt-dialog-min-block-size', '200%');
+	});
+	expect((await dialog.boundingBox()).height).toBeLessThanOrEqual(
+		area.height + 1,
+	);
+});
+
+for (const [id, label, direction] of [
+	['basic', 'Close', 'ltr'],
+	['arabic', 'إغلاق', 'rtl'],
+]) {
+	test(`icon Close stays at the dialog corner without resizing it in ${direction}`, async ({
+		page,
+		browserName,
+	}) => {
+		const host = page.locator(`#${id}`);
+		await host.locator('[data-alt-trigger]').click();
+		const dialog = host.locator('dialog');
+		const close = host.locator('[data-alt-close]');
+		await expect(close).toHaveAccessibleName(label);
+		await expect(close).toHaveText('\u2715');
+		const before = await dialog.boundingBox();
+		await page.keyboard.press(
+			browserName === 'webkit' && process.platform === 'darwin'
+				? 'Alt+Tab'
+				: 'Tab',
+		);
+		await expect(close).toBeFocused();
+		const after = await dialog.boundingBox();
+		expect(after).toEqual(before);
+		await expect(close).toHaveCSS('position', 'absolute');
+		await expect(close).toHaveCSS('border-top-width', '0px');
+		await expect(close).toHaveCSS('outline-style', 'solid');
+		await expect(close).toHaveCSS('outline-width', '3px');
+		const button = await close.boundingBox();
+		expect(button.height).toBeCloseTo(44, 3);
+		expect(button.width).toBeCloseTo(44, 3);
+		expect(button.y - after.y).toBeCloseTo(10, 0);
+		const end =
+			direction === 'rtl'
+				? button.x - after.x
+				: after.x + after.width - button.x - button.width;
+		expect(button.y - after.y).toBeGreaterThanOrEqual(8);
+		expect(end).toBeGreaterThanOrEqual(8);
+		expect(end).toBeCloseTo(10, 0);
+		await close.click();
+		await expect(dialog).not.toBeVisible();
+	});
+}
+
 test('a narrow image shows the description rather than only its dialog heading', async ({
 	page,
 }) => {
@@ -458,6 +544,53 @@ test('logical inline inset properties follow right-to-left direction', async ({
 });
 
 for (const width of [1280, 320]) {
+	test(`slide-up minimum fits the Close button and its focus ring at ${width}px`, async ({
+		page,
+		browserName,
+	}) => {
+		await page.setViewportSize({ width, height: 900 });
+		await page.emulateMedia({ reducedMotion: 'reduce' });
+		const host = page.locator('#slide-up');
+		await host.locator('img').evaluate((image) => {
+			image.alt = 'A bicycle.';
+		});
+		const dialog = host.locator('dialog');
+		await expect(dialog.locator('[data-alt-text]')).toHaveText(
+			'A bicycle.',
+		);
+		await host.locator('[data-alt-trigger]').click();
+		const panel = await dialog.boundingBox();
+		expect(panel.height).toBeGreaterThanOrEqual(64);
+		await page.keyboard.press(
+			browserName === 'webkit' && process.platform === 'darwin'
+				? 'Alt+Tab'
+				: 'Tab',
+		);
+		const close = host.locator('[data-alt-close]');
+		await expect(close).toBeFocused();
+		await expect(close).toHaveCSS('outline-style', 'solid');
+		expect(await dialog.boundingBox()).toEqual(panel);
+		const focus = await close.evaluate((button) => {
+			const bounds = button.getBoundingClientRect();
+			const style = getComputedStyle(button);
+			const extra =
+				parseFloat(style.outlineWidth) +
+				parseFloat(style.outlineOffset);
+			return {
+				top: bounds.top - extra,
+				right: bounds.right + extra,
+				bottom: bounds.bottom + extra,
+				left: bounds.left - extra,
+			};
+		});
+		expect(focus.top).toBeGreaterThanOrEqual(panel.y - 0.5);
+		expect(focus.left).toBeGreaterThanOrEqual(panel.x - 0.5);
+		expect(focus.bottom).toBeLessThanOrEqual(panel.y + panel.height + 0.5);
+		expect(focus.right).toBeLessThanOrEqual(panel.x + panel.width + 0.5);
+		await close.click();
+		await expect(dialog).not.toBeVisible();
+	});
+
 	for (const reducedMotion of ['no-preference', 'reduce']) {
 		test(`CSS slide-up demo anchors at block end and inline edges at ${width}px with motion ${reducedMotion}`, async ({
 			page,

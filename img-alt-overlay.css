@@ -19,13 +19,16 @@ img-alt-overlay img {
 img-alt-overlay [data-alt-trigger],
 img-alt-overlay [data-alt-close] {
 	font: inherit;
+	min-block-size: 2.75rem;
+	cursor: pointer;
+}
+
+img-alt-overlay [data-alt-trigger] {
 	color: var(--img-alt-button-color, #fff);
 	background: var(--img-alt-button-background, #111);
 	border: 2px solid currentColor;
 	border-radius: 0.25rem;
 	padding: 0.5rem 0.75rem;
-	min-block-size: 2.75rem;
-	cursor: pointer;
 }
 
 img-alt-overlay [data-alt-trigger] {
@@ -55,28 +58,56 @@ img-alt-overlay [data-alt-ui] > * {
 }
 
 img-alt-overlay [data-alt-dialog] {
-	position: static;
+	position: relative;
 	flex: 0 1 auto;
 	margin: auto 0;
 	box-sizing: border-box;
 	inline-size: 100%;
 	max-inline-size: 100%;
 	max-block-size: 100%;
-	min-block-size: 0;
+	min-block-size: min(var(--img-alt-dialog-min-block-size, 30%), 100%);
 	overflow: auto;
 	overscroll-behavior: contain;
 	color: var(--img-alt-dialog-color, CanvasText);
 	background: var(--img-alt-dialog-background, Canvas);
 	border: 2px solid currentColor;
 	border-radius: 0.5rem;
-	padding: 0.75rem;
+	padding: 0.75rem 3.75rem;
 	overflow-wrap: anywhere;
 	text-align: start;
 }
 
+img-alt-overlay [data-alt-dialog][open] {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: safe center;
+}
+
 img-alt-overlay [data-alt-text] {
+	flex: 0 0 auto;
+	max-inline-size: 100%;
 	white-space: pre-wrap;
-	margin-block: 0 0.75rem;
+	margin: 0;
+	text-align: center;
+	outline: none;
+}
+
+img-alt-overlay [data-alt-close] {
+	position: absolute;
+	inset-block-start: 0.5rem;
+	inset-inline-end: 0.5rem;
+	display: grid;
+	place-items: center;
+	inline-size: 2.75rem;
+	block-size: 2.75rem;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font-size: 1.25em;
+	line-height: 1;
 }
 
 /* Keep a focused control stable if Safari blurs it during pointer activation. */
@@ -94,7 +125,7 @@ img-alt-overlay [data-alt-close]:not(:focus, :active) {
 	white-space: nowrap;
 }
 
-img-alt-overlay :is(button, [data-alt-text]):focus-visible {
+img-alt-overlay button:focus-visible {
 	outline: 3px solid var(--img-alt-focus-color, Highlight);
 	outline-offset: 3px;
 }

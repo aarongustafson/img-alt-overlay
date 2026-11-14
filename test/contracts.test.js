@@ -84,6 +84,12 @@ describe('package contracts', () => {
 		const css = readFileSync('img-alt-overlay.css', 'utf8');
 		for (const property of declaration.cssProperties)
 			expect(css).toContain(property.name);
+		expect(declaration.cssProperties).toContainEqual(
+			expect.objectContaining({
+				name: '--img-alt-dialog-min-block-size',
+				default: '30%',
+			}),
+		);
 		const sides = [
 			'block-start',
 			'block-end',

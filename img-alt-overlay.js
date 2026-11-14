@@ -12,6 +12,7 @@ let nextId = 0;
  * @cssprop --img-alt-overlay-inset-block-end - Overlay area block-end inset (0.5rem).
  * @cssprop --img-alt-overlay-inset-inline-start - Overlay area inline-start inset (0.5rem).
  * @cssprop --img-alt-overlay-inset-inline-end - Overlay area inline-end inset (0.5rem).
+ * @cssprop --img-alt-dialog-min-block-size - Dialog minimum block size within the overlay area (30%).
  */
 export class ImgAltOverlayElement extends BaseElement {
 	static observedAttributes = ['button-label', 'dialog-label', 'close-label'];
@@ -213,7 +214,11 @@ export class ImgAltOverlayElement extends BaseElement {
 		trigger.setAttribute('aria-expanded', 'false');
 		const close = document.createElement('button');
 		close.type = 'button';
-		close.textContent = this._labels['close-label'];
+		close.setAttribute('aria-label', this._labels['close-label']);
+		const icon = document.createElement('span');
+		icon.setAttribute('aria-hidden', 'true');
+		icon.textContent = '\u2715';
+		close.append(icon);
 		close.setAttribute('data-alt-close', '');
 		close.setAttribute('commandfor', dialog.id);
 		close.setAttribute('command', 'close');

@@ -119,8 +119,11 @@ describe('image alt dialog', () => {
 		expect(element.querySelector('h2').textContent).toBe(
 			'Description de l’image',
 		);
-		expect(element.querySelector('[data-alt-close]').textContent).toBe(
-			'Fermer',
+		const close = element.querySelector('[data-alt-close]');
+		expect(close.getAttribute('aria-label')).toBe('Fermer');
+		expect(close.textContent).toBe('\u2715');
+		expect(close.firstElementChild.getAttribute('aria-hidden')).toBe(
+			'true',
 		);
 	});
 
