@@ -1,6 +1,6 @@
 {
 	"name": "@aarongustafson/img-alt-overlay",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Reveal an image's alternative text in a non-modal, in-image dialog",
 	"keywords": [
 		"html",
