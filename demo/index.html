@@ -4,21 +4,46 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay demo</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/microlighter@2.2.0/dist/themes/github.css"
+		/>
 		<link rel="stylesheet" href="./styles.css" />
+		<link rel="stylesheet" href="./demo-shell.css" />
 		<link rel="stylesheet" href="../img-alt-overlay.css" />
 		<link rel="modulepreload" href="../img-alt-overlay.js" />
 		<script type="module" src="../define.js"></script>
 	</head>
-	<body>
+	<body data-syntax-theme="github">
+		<a class="skip-link" href="#main">Skip to examples</a>
 		<header>
+			<p class="eyebrow">Web component / Examples</p>
 			<h1>&lt;img-alt-overlay&gt;</h1>
-			<p>
+			<p class="lede">
 				Read an image’s alternative text in an in-image overlay. See the
 				<a href="../README.md">README</a> for installation and API
 				details.
 			</p>
+			<nav aria-label="Component resources">
+				<a
+					href="https://github.com/aarongustafson/img-alt-overlay/blob/main/README.md"
+					>Read the README</a
+				>
+				<a href="https://github.com/aarongustafson/img-alt-overlay"
+					>View on GitHub</a
+				>
+				<a href="./esm.html">esm.sh example</a>
+				<a href="./unpkg.html">unpkg example</a>
+			</nav>
 		</header>
-		<main>
+		<main id="main" tabindex="-1">
+			<p
+				id="microlighter-status"
+				class="enhancement-status"
+				role="status"
+				hidden
+			></p>
+
 			<p>
 				Wrap one image, optionally inside a picture or link. The
 				component adds a “View alt text” button only when the image has
@@ -42,11 +67,21 @@
 					never replaces or clones the image.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;img-alt-overlay&gt;
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Start with an image code 1"
+							tabindex="0"
+						><code>&lt;img-alt-overlay&gt;
   &lt;img src="bicycle.svg"
     width="640" height="360"
     alt="A red bicycle beside a blue wall, with a basket on its handlebars."&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay id="basic">
 							<img
@@ -68,13 +103,23 @@
 					<code>dir</code> inherit normally.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;img-alt-overlay lang="fr"
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Translate the controls code 2"
+							tabindex="0"
+						><code>&lt;img-alt-overlay lang="fr"
   button-label="Voir le texte alternatif"
   dialog-label="Description de l’image"
   close-label="Fermer"&gt;
   &lt;img src="bicycle.svg" width="640" height="360"
     alt="Un vélo rouge devant un mur bleu, avec un panier sur le guidon."&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay
 							id="french"
@@ -94,13 +139,23 @@
 					</div>
 				</div>
 				<div class="code-demo-pair">
-					<pre><code>&lt;img-alt-overlay lang="ar" dir="rtl"
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Translate the controls code 3"
+							tabindex="0"
+						><code>&lt;img-alt-overlay lang="ar" dir="rtl"
   button-label="عرض النص البديل"
   dialog-label="وصف الصورة"
   close-label="إغلاق"&gt;
   &lt;img src="bicycle.svg" width="640" height="360"
     alt="دراجة حمراء أمام جدار أزرق، وسلة على المقود."&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay
 							id="arabic"
@@ -129,7 +184,16 @@
 					outside the image wrapper.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;figure&gt;
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Keep responsive images and links code 4"
+							tabindex="0"
+						><code>&lt;figure&gt;
   &lt;img-alt-overlay&gt;
     &lt;a href="bicycle.svg"&gt;
       &lt;picture&gt;
@@ -142,6 +206,7 @@
   &lt;/img-alt-overlay&gt;
   &lt;figcaption&gt;A neighborhood bicycle.&lt;/figcaption&gt;
 &lt;/figure&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<figure>
 							<img-alt-overlay id="linked">
@@ -179,13 +244,23 @@
 					works with browser-default presentation.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>img-alt-overlay.bright {
+					<micro-lighter
+						class="code-panel"
+						language="css"
+						controls="copy"
+						data-label="CSS"
+					>
+						<pre
+							aria-label="Theme the overlay code 5"
+							tabindex="0"
+						><code>img-alt-overlay.bright {
   --img-alt-dialog-min-block-size: 45%;
   --img-alt-button-background: #fff;
   --img-alt-button-color: #132d46;
   --img-alt-dialog-background: #f0f7ff;
   --img-alt-dialog-color: #132d46;
 }</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay class="bright">
 							<img
@@ -218,7 +293,16 @@
 					it below the panel.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>img-alt-overlay.repositioned {
+					<micro-lighter
+						class="code-panel"
+						language="css"
+						controls="copy"
+						data-label="CSS"
+					>
+						<pre
+							aria-label="Theme the overlay code 6"
+							tabindex="0"
+						><code>img-alt-overlay.repositioned {
   --img-alt-button-inset-block-start: auto;
   --img-alt-button-inset-block-end: 0.75rem;
   --img-alt-button-inset-inline-start: 0.75rem;
@@ -228,6 +312,7 @@
   --img-alt-overlay-inset-inline-start: 0.75rem;
   --img-alt-overlay-inset-inline-end: 0.75rem;
 }</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay id="repositioned" class="repositioned">
 							<img
@@ -253,7 +338,16 @@
 					clickable.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>img-alt-overlay.site-style {
+					<micro-lighter
+						class="code-panel"
+						language="css"
+						controls="copy"
+						data-label="CSS"
+					>
+						<pre
+							aria-label="Theme the overlay code 7"
+							tabindex="0"
+						><code>img-alt-overlay.site-style {
   --img-alt-dialog-background: #000;
   --img-alt-dialog-color: #fff;
   --img-alt-overlay-inset-block-end: 0;
@@ -265,6 +359,7 @@ img-alt-overlay.site-style [data-alt-dialog] {
   border: 0;
   border-radius: 0;
 }</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay id="site-style" class="site-style">
 							<img
@@ -292,7 +387,16 @@ img-alt-overlay.site-style [data-alt-dialog] {
 					transitions. No JavaScript animation code is involved.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>img-alt-overlay.slide-up {
+					<micro-lighter
+						class="code-panel"
+						language="css"
+						controls="copy"
+						data-label="CSS"
+					>
+						<pre
+							aria-label="Theme the overlay code 8"
+							tabindex="0"
+						><code>img-alt-overlay.slide-up {
   --img-alt-overlay-inset-block-start: auto;
   --img-alt-overlay-inset-block-end: 0;
   --img-alt-overlay-inset-inline-start: 0;
@@ -331,6 +435,7 @@ img-alt-overlay.slide-up [data-alt-dialog] {
     }
   }
 }</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay
 							id="slide-up"
@@ -356,10 +461,20 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 					or mark the image decorative.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;img-alt-overlay&gt;
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Leave decorative images alone code 9"
+							tabindex="0"
+						><code>&lt;img-alt-overlay&gt;
   &lt;img src="bicycle.svg" width="640"
     height="360" alt=""&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay id="decorative">
 							<img
@@ -388,11 +503,21 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 					scroll inside the dialog.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;img-alt-overlay&gt;
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Loading, failure, and long descriptions code 10"
+							tabindex="0"
+						><code>&lt;img-alt-overlay&gt;
   &lt;img src="missing-image.svg" width="640"
     height="360"
     alt="A red bicycle with a basket. The front wheel points slightly to the left; a blue wall fills the background."&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay id="broken">
 							<img
@@ -425,5 +550,6 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 				>.
 			</p>
 		</footer>
+		<script type="module" src="./code-examples.js"></script>
 	</body>
 </html>

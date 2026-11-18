@@ -4,18 +4,43 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay via unpkg</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/microlighter@2.2.0/dist/themes/github.css"
+		/>
 		<link rel="stylesheet" href="./styles.css" />
+		<link rel="stylesheet" href="./demo-shell.css" />
 		<link rel="stylesheet" href="../img-alt-overlay.css" />
 	</head>
-	<body>
+	<body data-syntax-theme="github">
+		<a class="skip-link" href="#main">Skip to examples</a>
 		<header>
-			<h1>&lt;img-alt-overlay&gt; via unpkg</h1>
-			<p>
+			<p class="eyebrow">Web component / unpkg</p>
+			<h1>&lt;img-alt-overlay&gt;</h1>
+			<p class="lede">
 				Automatic registration from the latest published package. See
 				the <a href="../README.md">README</a>.
 			</p>
+			<nav aria-label="Component resources">
+				<a
+					href="https://github.com/aarongustafson/img-alt-overlay/blob/main/README.md"
+					>Read the README</a
+				>
+				<a href="https://github.com/aarongustafson/img-alt-overlay"
+					>View on GitHub</a
+				>
+				<a href="./index.html">All examples</a>
+				<a href="./esm.html">esm.sh example</a>
+			</nav>
 		</header>
-		<main>
+		<main id="main" tabindex="-1">
+			<p
+				id="microlighter-status"
+				class="enhancement-status"
+				role="status"
+				hidden
+			></p>
+
 			<section class="demo-section">
 				<h2>Load the registration entry point</h2>
 				<p>
@@ -24,7 +49,16 @@
 					pinned version for production.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>&lt;script type="module"
+					<micro-lighter
+						class="code-panel"
+						language="html"
+						controls="copy"
+						data-label="HTML"
+					>
+						<pre
+							aria-label="Load the registration entry point code 1"
+							tabindex="0"
+						><code>&lt;script type="module"
   src="https://unpkg.com/@aarongustafson/img-alt-overlay@latest/define.js?module"&gt;
 &lt;/script&gt;
 
@@ -32,6 +66,7 @@
   &lt;img src="bicycle.svg" width="640" height="360"
     alt="A red bicycle beside a blue wall."&gt;
 &lt;/img-alt-overlay&gt;</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay>
 							<img
@@ -59,5 +94,6 @@
 			type="module"
 			src="https://unpkg.com/@aarongustafson/img-alt-overlay@latest/define.js?module"
 		></script>
+		<script type="module" src="./code-examples.js"></script>
 	</body>
 </html>

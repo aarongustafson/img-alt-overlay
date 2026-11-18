@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
+	await page.route(
+		'https://cdn.jsdelivr.net/npm/microlighter@2.2.0/dist/**',
+		(route) => route.abort(),
+	);
 	await page.goto('/demo/');
 	await expect(page.locator('#basic [data-alt-trigger]')).toBeVisible();
 });
@@ -52,6 +56,13 @@ test('keyboard operation, no focus trap, Escape and focus restoration', async ({
 	await expect(trigger).toBeFocused();
 	await page.keyboard.press('Enter');
 	await page.keyboard.press(tab);
+	await page.keyboard.press(tab);
+	await expect(
+		page
+			.locator('.code-demo-pair')
+			.filter({ has: page.locator('#french') })
+			.locator('pre'),
+	).toBeFocused();
 	await page.keyboard.press(tab);
 	await expect(page.locator('#french [data-alt-trigger]')).toBeFocused();
 	await expect(dialog).toBeVisible();
@@ -561,6 +572,7 @@ for (const width of [1280, 320]) {
 				'A bicycle.',
 			);
 			await host.locator('[data-alt-trigger]').click();
+			await dialog.scrollIntoViewIfNeeded();
 			const panel = await dialog.boundingBox();
 			expect(panel.height).toBeGreaterThanOrEqual(64);
 			await page.keyboard.press(
