@@ -1,4 +1,22 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures.js';
+
+test('component-only demo checks never request the optional code CDN', async ({
+	page,
+}) => {
+	const requests = [];
+	await page.route(
+		'https://cdn.jsdelivr.net/npm/microlighter@2.2.0/dist/**',
+		(route) => {
+			requests.push(route.request().url());
+			return route.abort();
+		},
+	);
+	await page.goto('/demo/');
+	await expect(
+		page.getByRole('button', { name: 'View alt text' }).first(),
+	).toBeVisible();
+	expect(requests).toEqual([]);
+});
 
 test('versioned class-only CDN import registers manually and works', async ({
 	page,
