@@ -573,7 +573,10 @@ for (const width of [1280, 320]) {
 			);
 			await host.locator('[data-alt-trigger]').click();
 			await dialog.scrollIntoViewIfNeeded();
-			const panel = await dialog.boundingBox();
+			// Firefox's protocol bounding box can lose precision in derived sizes.
+			const panel = await dialog.evaluate((node) =>
+				node.getBoundingClientRect().toJSON(),
+			);
 			expect(panel.height).toBeGreaterThanOrEqual(64);
 			await page.keyboard.press(
 				browserName === 'webkit' && process.platform === 'darwin'
@@ -583,7 +586,11 @@ for (const width of [1280, 320]) {
 			const close = host.locator('[data-alt-close]');
 			await expect(close).toBeFocused();
 			await expect(close).toHaveCSS('outline-style', 'solid');
-			expect(await dialog.boundingBox()).toEqual(panel);
+			expect(
+				await dialog.evaluate((node) =>
+					node.getBoundingClientRect().toJSON(),
+				),
+			).toEqual(panel);
 			const focus = await close.evaluate((button) => {
 				const bounds = button.getBoundingClientRect();
 				const style = getComputedStyle(button);
