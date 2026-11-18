@@ -1,6 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures.js';
 
 test.beforeEach(async ({ page }) => {
+	await page.route(
+		'https://cdn.jsdelivr.net/npm/microlighter@2.2.0/dist/**',
+		(route) => route.abort(),
+	);
 	await page.goto('/demo/');
 	await expect(page.locator('#basic [data-alt-trigger]')).toBeVisible();
 });
@@ -52,6 +56,13 @@ test('keyboard operation, no focus trap, Escape and focus restoration', async ({
 	await expect(trigger).toBeFocused();
 	await page.keyboard.press('Enter');
 	await page.keyboard.press(tab);
+	await page.keyboard.press(tab);
+	await expect(
+		page
+			.locator('.code-demo-pair')
+			.filter({ has: page.locator('#french') })
+			.locator('pre'),
+	).toBeFocused();
 	await page.keyboard.press(tab);
 	await expect(page.locator('#french [data-alt-trigger]')).toBeFocused();
 	await expect(dialog).toBeVisible();
@@ -561,7 +572,11 @@ for (const width of [1280, 320]) {
 				'A bicycle.',
 			);
 			await host.locator('[data-alt-trigger]').click();
-			const panel = await dialog.boundingBox();
+			await dialog.scrollIntoViewIfNeeded();
+			// Firefox's protocol bounding box can lose precision in derived sizes.
+			const panel = await dialog.evaluate((node) =>
+				node.getBoundingClientRect().toJSON(),
+			);
 			expect(panel.height).toBeGreaterThanOrEqual(64);
 			await page.keyboard.press(
 				browserName === 'webkit' && process.platform === 'darwin'
@@ -571,7 +586,11 @@ for (const width of [1280, 320]) {
 			const close = host.locator('[data-alt-close]');
 			await expect(close).toBeFocused();
 			await expect(close).toHaveCSS('outline-style', 'solid');
-			expect(await dialog.boundingBox()).toEqual(panel);
+			expect(
+				await dialog.evaluate((node) =>
+					node.getBoundingClientRect().toJSON(),
+				),
+			).toEqual(panel);
 			const focus = await close.evaluate((button) => {
 				const bounds = button.getBoundingClientRect();
 				const style = getComputedStyle(button);

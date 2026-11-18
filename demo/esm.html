@@ -5,17 +5,38 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay via esm.sh</title>
 		<link rel="stylesheet" href="./styles.css" />
+		<link rel="stylesheet" href="./demo-shell.css" />
 		<link rel="stylesheet" href="../img-alt-overlay.css" />
 	</head>
-	<body>
+	<body data-syntax-theme="github">
+		<a class="skip-link" href="#main">Skip to examples</a>
 		<header>
-			<h1>&lt;img-alt-overlay&gt; via esm.sh</h1>
-			<p>
+			<p class="eyebrow">Web component / esm</p>
+			<h1>&lt;img-alt-overlay&gt;</h1>
+			<p class="lede">
 				A class-only import with manual registration. See the
 				<a href="../README.md">README</a>.
 			</p>
+			<nav aria-label="Component resources">
+				<a
+					href="https://github.com/aarongustafson/img-alt-overlay/blob/main/README.md"
+					>Read the README</a
+				>
+				<a href="https://github.com/aarongustafson/img-alt-overlay"
+					>View on GitHub</a
+				>
+				<a href="./index.html">All examples</a>
+				<a href="./unpkg.html">unpkg example</a>
+			</nav>
 		</header>
-		<main>
+		<main id="main" tabindex="-1">
+			<p
+				id="microlighter-status"
+				class="enhancement-status"
+				role="status"
+				hidden
+			></p>
+
 			<section class="demo-section">
 				<h2>Import and register the class</h2>
 				<p>
@@ -24,12 +45,22 @@
 					controls appear.
 				</p>
 				<div class="code-demo-pair">
-					<pre><code>import { ImgAltOverlayElement } from
+					<micro-lighter
+						class="code-panel"
+						language="javascript"
+						controls="copy"
+						data-label="JavaScript"
+					>
+						<pre
+							aria-label="Import and register the class code 1"
+							tabindex="0"
+						><code>import { ImgAltOverlayElement } from
   'https://esm.sh/@aarongustafson/img-alt-overlay@1.0.0/img-alt-overlay.js?bundle&amp;target=es2022';
 
 customElements.define(
   'img-alt-overlay', ImgAltOverlayElement
 );</code></pre>
+					</micro-lighter>
 					<div class="demo">
 						<img-alt-overlay>
 							<img
@@ -60,5 +91,6 @@ customElements.define(
 				customElements.define('img-alt-overlay', ImgAltOverlayElement);
 			}
 		</script>
+		<script type="module" src="./code-examples.js"></script>
 	</body>
 </html>
