@@ -4,11 +4,11 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay via esm.sh</title>
-		<link rel="stylesheet" href="./styles.css" />
 		<link rel="stylesheet" href="./demo-shell.css" />
 		<link rel="stylesheet" href="../img-alt-overlay.css" />
+		<link rel="stylesheet" href="./styles.css" />
 	</head>
-	<body data-syntax-theme="github">
+	<body data-demo-page="full" data-syntax-theme="github">
 		<a class="skip-link" href="#main">Skip to examples</a>
 		<header>
 			<p class="eyebrow">Web component / esm</p>
@@ -32,6 +32,9 @@
 		<main id="main" tabindex="-1">
 			<p
 				id="microlighter-status"
+				data-loading-message="Loading optional code highlighting and Copy controls."
+				data-failure-message="MicroLighter could not load. Code remains readable and selectable; the component loads independently."
+				data-theme-failure-message="Code highlighting and Copy controls are available, but the syntax theme could not load. The component loads independently."
 				class="enhancement-status"
 				role="status"
 				hidden
@@ -54,14 +57,14 @@
 						<pre
 							aria-label="Import and register the class code 1"
 							tabindex="0"
-						><code>import { ImgAltOverlayElement } from
-  'https://esm.sh/@aarongustafson/img-alt-overlay@1.0.0/img-alt-overlay.js?bundle&amp;target=es2022';
+						><code><mark>import { ImgAltOverlayElement } from
+  'https://esm.sh/@aarongustafson/img-alt-overlay@1.0.0/img-alt-overlay.js?bundle&amp;target=es2022';</mark>
 
-customElements.define(
+<mark>customElements.define(
   'img-alt-overlay', ImgAltOverlayElement
-);</code></pre>
+);</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay>
 							<img
 								src="./bicycle.svg"

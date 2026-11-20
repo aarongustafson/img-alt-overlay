@@ -13,6 +13,13 @@ import { describe, expect, it } from 'vitest';
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 
+it('trims block-edge margins inside demo sections', () => {
+	const styles = readFileSync('demo/demo-shell.css', 'utf8');
+	expect(styles).toMatch(
+		/\.demo-section(?:,\s*\.api-reference)?\s*\{[^}]*\bmargin-trim:\s*block;/,
+	);
+});
+
 describe('package contracts', () => {
 	it('supports DOM-free imports and registers only through define.js', () => {
 		const result = execFileSync(
