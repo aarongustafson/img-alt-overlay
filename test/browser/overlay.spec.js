@@ -341,7 +341,11 @@ test('Close is visually hidden until focused, but stays keyboard reachable', asy
 		await close.evaluate((node) => getComputedStyle(node).clipPath),
 	).toBe('inset(50%)');
 	await close.focus();
-	const focused = await close.boundingBox();
+	// Firefox's protocol quads can lose precision when subtracting coordinates.
+	const focused = await close.evaluate((node) => {
+		const { width, height } = node.getBoundingClientRect();
+		return { width, height };
+	});
 	expect(focused.width).toBeGreaterThan(1);
 	expect(focused.height).toBeGreaterThanOrEqual(44);
 	expect(

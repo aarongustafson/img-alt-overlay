@@ -1,88 +1,8 @@
-@font-face {
-	font-family: 'system-monospace';
-	src:
-		local('SFMono-Regular'), local('Menlo'), local('Monaco'),
-		local('Consolas'), local('Liberation Mono'), local('Courier New'),
-		local('monospace');
-}
-
-:root {
-	color-scheme: light dark;
-	font-family: system-ui, sans-serif;
-	line-height: 1.6;
-	color: CanvasText;
-	background: Canvas;
-}
-
-body {
-	max-inline-size: 88rem;
-	margin: auto;
-	padding: 1rem;
-}
-
-h1 {
-	font-size: clamp(1.5rem, 4vw, 2.25rem);
-	overflow-wrap: anywhere;
-}
-
-header,
-footer {
-	padding-block: 1rem;
-}
-
-footer {
-	margin-block-start: 2rem;
-	border-block-start: 1px solid;
-}
-
-a {
-	color: LinkText;
-}
-
-.demo-section {
-	margin-trim: block;
-	margin-block: 2rem;
-	padding: 1rem;
-	border: 1px solid GrayText;
-	border-radius: 0.5rem;
-}
-
-.demo-section h2 {
-	margin-block-start: 0;
-}
-
-.code-demo-pair {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
-	margin-block: 1rem;
-	align-items: start;
-}
-
-pre {
-	margin: 0;
-	padding: 1rem;
-	overflow: auto;
-	border: 1px solid GrayText;
-	background: Field;
-	color: FieldText;
-}
-
-code {
-	font-size: 0.9em;
-}
-
-.demo {
-	min-inline-size: 0;
-	padding: 1rem;
-	border: 1px solid GrayText;
-}
-
-figure {
+.demo figure {
 	margin: 0;
 }
 
-figcaption {
+.demo figcaption {
 	margin-block-start: 0.5rem;
 }
 
@@ -155,11 +75,5 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 			opacity: 0;
 			transform: translateY(100%);
 		}
-	}
-}
-
-@media (min-width: 52rem) {
-	.code-demo-pair {
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	}
 }

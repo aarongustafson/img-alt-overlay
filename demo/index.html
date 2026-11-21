@@ -4,13 +4,13 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>img-alt-overlay demo</title>
-		<link rel="stylesheet" href="./styles.css" />
 		<link rel="stylesheet" href="./demo-shell.css" />
 		<link rel="stylesheet" href="../img-alt-overlay.css" />
 		<link rel="modulepreload" href="../img-alt-overlay.js" />
 		<script type="module" src="../define.js"></script>
+		<link rel="stylesheet" href="./styles.css" />
 	</head>
-	<body data-syntax-theme="github">
+	<body data-demo-page="full" data-syntax-theme="github">
 		<a class="skip-link" href="#main">Skip to examples</a>
 		<header>
 			<p class="eyebrow">Web component / Examples</p>
@@ -35,6 +35,9 @@
 		<main id="main" tabindex="-1">
 			<p
 				id="microlighter-status"
+				data-loading-message="Loading optional code highlighting and Copy controls."
+				data-failure-message="MicroLighter could not load. Code remains readable and selectable; the component loads independently."
+				data-theme-failure-message="Code highlighting and Copy controls are available, but the syntax theme could not load. The component loads independently."
 				class="enhancement-status"
 				role="status"
 				hidden
@@ -72,13 +75,13 @@
 						<pre
 							aria-label="Start with an image code 1"
 							tabindex="0"
-						><code>&lt;img-alt-overlay&gt;
+						><code><mark>&lt;img-alt-overlay&gt;</mark>
   &lt;img src="bicycle.svg"
     width="640" height="360"
     alt="A red bicycle beside a blue wall, with a basket on its handlebars."&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
+<mark>&lt;/img-alt-overlay&gt;</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay id="basic">
 							<img
 								src="./bicycle.svg"
@@ -108,15 +111,15 @@
 						<pre
 							aria-label="Translate the controls code 2"
 							tabindex="0"
-						><code>&lt;img-alt-overlay lang="fr"
+						><code><mark>&lt;img-alt-overlay lang="fr"
   button-label="Voir le texte alternatif"
   dialog-label="Description de l’image"
-  close-label="Fermer"&gt;
+  close-label="Fermer"&gt;</mark>
   &lt;img src="bicycle.svg" width="640" height="360"
     alt="Un vélo rouge devant un mur bleu, avec un panier sur le guidon."&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
+<mark>&lt;/img-alt-overlay&gt;</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay
 							id="french"
 							lang="fr"
@@ -144,15 +147,15 @@
 						<pre
 							aria-label="Translate the controls code 3"
 							tabindex="0"
-						><code>&lt;img-alt-overlay lang="ar" dir="rtl"
+						><code><mark>&lt;img-alt-overlay lang="ar" dir="rtl"
   button-label="عرض النص البديل"
   dialog-label="وصف الصورة"
-  close-label="إغلاق"&gt;
+  close-label="إغلاق"&gt;</mark>
   &lt;img src="bicycle.svg" width="640" height="360"
     alt="دراجة حمراء أمام جدار أزرق، وسلة على المقود."&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
+<mark>&lt;/img-alt-overlay&gt;</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay
 							id="arabic"
 							lang="ar"
@@ -190,7 +193,7 @@
 							aria-label="Keep responsive images and links code 4"
 							tabindex="0"
 						><code>&lt;figure&gt;
-  &lt;img-alt-overlay&gt;
+  <mark>&lt;img-alt-overlay&gt;</mark>
     &lt;a href="bicycle.svg"&gt;
       &lt;picture&gt;
         &lt;source media="(min-width: 40em)"
@@ -199,11 +202,11 @@
           height="360" alt="View the red bicycle illustration."&gt;
       &lt;/picture&gt;
     &lt;/a&gt;
-  &lt;/img-alt-overlay&gt;
+  <mark>&lt;/img-alt-overlay&gt;</mark>
   &lt;figcaption&gt;A neighborhood bicycle.&lt;/figcaption&gt;
 &lt;/figure&gt;</code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<figure>
 							<img-alt-overlay id="linked">
 								<a href="./bicycle.svg">
@@ -257,7 +260,7 @@
   --img-alt-dialog-color: #132d46;
 }</code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay class="bright">
 							<img
 								src="./bicycle.svg"
@@ -309,7 +312,7 @@
   --img-alt-overlay-inset-inline-end: 0.75rem;
 }</code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay id="repositioned" class="repositioned">
 							<img
 								src="./bicycle.svg"
@@ -356,7 +359,7 @@ img-alt-overlay.site-style [data-alt-dialog] {
   border-radius: 0;
 }</code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay id="site-style" class="site-style">
 							<img
 								src="./bicycle.svg"
@@ -432,7 +435,7 @@ img-alt-overlay.slide-up [data-alt-dialog] {
   }
 }</code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay
 							id="slide-up"
 							class="site-style slide-up"
@@ -466,12 +469,12 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 						<pre
 							aria-label="Leave decorative images alone code 9"
 							tabindex="0"
-						><code>&lt;img-alt-overlay&gt;
+						><code><mark>&lt;img-alt-overlay&gt;</mark>
   &lt;img src="bicycle.svg" width="640"
     height="360" alt=""&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
+<mark>&lt;/img-alt-overlay&gt;</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay id="decorative">
 							<img
 								src="./bicycle.svg"
@@ -508,13 +511,13 @@ img-alt-overlay.slide-up [data-alt-dialog] {
 						<pre
 							aria-label="Loading, failure, and long descriptions code 10"
 							tabindex="0"
-						><code>&lt;img-alt-overlay&gt;
+						><code><mark>&lt;img-alt-overlay&gt;</mark>
   &lt;img src="missing-image.svg" width="640"
     height="360"
     alt="A red bicycle with a basket. The front wheel points slightly to the left; a blue wall fills the background."&gt;
-&lt;/img-alt-overlay&gt;</code></pre>
+<mark>&lt;/img-alt-overlay&gt;</mark></code></pre>
 					</micro-lighter>
-					<div class="demo">
+					<div class="demo" data-demo-label="Live example">
 						<img-alt-overlay id="broken">
 							<img
 								src="./missing-image.svg"
